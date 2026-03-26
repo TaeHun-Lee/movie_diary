@@ -1,0 +1,5 @@
+# Python virtual environment
+.venv/
+
+# Large design files (optional, based on approval)
+# images/

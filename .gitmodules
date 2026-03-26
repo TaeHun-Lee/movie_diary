@@ -1,0 +1,6 @@
+[submodule "movie_diary_app"]
+	path = movie_diary_app
+	url = https://github.com/TaeHun-Lee/movie_diary_app.git
+[submodule "movie-diary-backend"]
+	path = movie-diary-backend
+	url = https://github.com/TaeHun-Lee/movie_diary_backend.git

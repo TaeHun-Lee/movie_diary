@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Movie Diary - Signup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-container": "#4f5064",
+                        "on-primary-fixed-variant": "#01005a",
+                        "outline": "#747c81",
+                        "secondary-fixed-dim": "#d3d2eb",
+                        "on-tertiary": "#fff7fb",
+                        "secondary-dim": "#505166",
+                        "primary-dim": "#3d43bc",
+                        "on-secondary-fixed-variant": "#595a6f",
+                        "on-tertiary-container": "#614469",
+                        "error-container": "#f97386",
+                        "secondary-container": "#e1e0f9",
+                        "on-error": "#fff7f7",
+                        "tertiary-fixed-dim": "#e8c3ef",
+                        "on-primary-fixed": "#000000",
+                        "on-secondary": "#fbf8ff",
+                        "secondary": "#5c5d72",
+                        "surface": "#f7f9fc",
+                        "on-tertiary-fixed-variant": "#6b4d73",
+                        "tertiary-container": "#f6d0fd",
+                        "surface-container-low": "#f0f4f8",
+                        "inverse-surface": "#0b0f11",
+                        "tertiary": "#72547a",
+                        "background": "#f7f9fc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9fc",
+                        "error-dim": "#6b0221",
+                        "primary-fixed-dim": "#6b72eb",
+                        "inverse-primary": "#7d84fe",
+                        "surface-container": "#eaeef3",
+                        "surface-variant": "#dce3e9",
+                        "on-secondary-fixed": "#3d3e51",
+                        "surface-tint": "#4a50c8",
+                        "on-surface": "#2c3338",
+                        "on-error-container": "#6e0523",
+                        "primary": "#4a50c8",
+                        "on-tertiary-fixed": "#4d3155",
+                        "on-primary-container": "#000022",
+                        "surface-container-high": "#e3e9ee",
+                        "on-surface-variant": "#596065",
+                        "surface-dim": "#d4dbe1",
+                        "tertiary-fixed": "#f6d0fd",
+                        "on-primary": "#fbf7ff",
+                        "outline-variant": "#acb3b9",
+                        "primary-container": "#787ff9",
+                        "secondary-fixed": "#e1e0f9",
+                        "tertiary-dim": "#66496e",
+                        "surface-container-highest": "#dce3e9",
+                        "primary-fixed": "#787ff9",
+                        "error": "#a8364b",
+                        "on-background": "#2c3338",
+                        "inverse-on-surface": "#9a9da0"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .neuromorphic-input {
+            box-shadow: inset 2px 2px 5px rgba(212, 219, 225, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+        }
+        .glassmorphic-btn {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(74, 80, 200, 0.9), rgba(120, 127, 249, 0.9));
+            box-shadow: -4px -4px 12px rgba(255, 255, 255, 0.8), 4px 4px 12px rgba(212, 219, 225, 0.4), inset 1px 1px 0px rgba(255, 255, 255, 0.3);
+        }
+        .ethereal-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(120, 127, 249, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(246, 208, 253, 0.15) 0%, transparent 50%),
+                        var(--tw-colors-surface-bright);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen flex flex-col ethereal-bg overflow-x-hidden">
+<!-- Minimal Header for Focused View -->
+<header class="flex items-center p-4">
+<a aria-label="Go back" class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</a>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-6 py-8 w-full max-w-md mx-auto relative z-10">
+<!-- Header Text -->
+<div class="text-center mb-10 w-full">
+<h1 class="font-headline text-headline-md font-bold text-on-surface mb-2 tracking-tight">Create Account</h1>
+<p class="font-body text-body-lg text-on-surface-variant">Join your personal cinema sanctuary</p>
+</div>
+<!-- Signup Form -->
+<form class="w-full space-y-6">
+<!-- Full Name Input -->
+<div>
+<label class="sr-only" for="fullName">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">person</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container-high text-on-surface placeholder:text-on-surface-variant/60 rounded-md border border-outline-variant/15 focus:border-primary/30 focus:ring-0 outline-none neuromorphic-input transition-all font-body text-body-lg" id="fullName" placeholder="Full Name" type="text"/>
+</div>
+</div>
+<!-- Email Input -->
+<div>
+<label class="sr-only" for="email">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container-high text-on-surface placeholder:text-on-surface-variant/60 rounded-md border border-outline-variant/15 focus:border-primary/30 focus:ring-0 outline-none neuromorphic-input transition-all font-body text-body-lg" id="email" placeholder="Email" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div>
+<label class="sr-only" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock</span>
+<input class="w-full h-14 pl-12 pr-12 bg-surface-container-high text-on-surface placeholder:text-on-surface-variant/60 rounded-md border border-outline-variant/15 focus:border-primary/30 focus:ring-0 outline-none neuromorphic-input transition-all font-body text-body-lg" id="password" placeholder="Password" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Input -->
+<div>
+<label class="sr-only" for="confirmPassword">Confirm Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock_reset</span>
+<input class="w-full h-14 pl-12 pr-12 bg-surface-container-high text-on-surface placeholder:text-on-surface-variant/60 rounded-md border border-outline-variant/15 focus:border-primary/30 focus:ring-0 outline-none neuromorphic-input transition-all font-body text-body-lg" id="confirmPassword" placeholder="Confirm Password" type="password"/>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-14 mt-4 rounded-md text-on-primary font-headline font-semibold text-lg glassmorphic-btn flex items-center justify-center gap-2 hover:opacity-95 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-surface" type="submit">
+                Create Account
+                <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Links -->
+<div class="mt-8 text-center">
+<p class="font-body text-body-lg text-on-surface-variant">
+                Already have an account? 
+                <a class="text-primary font-semibold hover:text-primary-container transition-colors ml-1" href="#">Login</a>
+</p>
+</div>
+</main>
+<!-- Decorative blur elements for ethereal effect -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+<div class="absolute -top-[20%] -right-[10%] w-[500px] h-[500px] rounded-full bg-primary-container/20 blur-[100px]"></div>
+<div class="absolute -bottom-[20%] -left-[10%] w-[400px] h-[400px] rounded-full bg-tertiary-container/20 blur-[80px]"></div>
+</div>
+</body></html>

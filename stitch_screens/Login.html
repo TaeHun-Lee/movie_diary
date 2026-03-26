@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Movie Diary - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#e8c3ef",
+                        "background": "#f7f9fc",
+                        "secondary-dim": "#505166",
+                        "error": "#a8364b",
+                        "inverse-primary": "#7d84fe",
+                        "surface-tint": "#4a50c8",
+                        "on-surface-variant": "#596065",
+                        "error-container": "#f97386",
+                        "primary-container": "#787ff9",
+                        "primary-dim": "#3d43bc",
+                        "on-tertiary": "#fff7fb",
+                        "surface-container": "#eaeef3",
+                        "primary-fixed": "#787ff9",
+                        "surface-container-low": "#f0f4f8",
+                        "on-tertiary-fixed": "#4d3155",
+                        "inverse-surface": "#0b0f11",
+                        "surface": "#f7f9fc",
+                        "error-dim": "#6b0221",
+                        "surface-container-high": "#e3e9ee",
+                        "secondary-container": "#e1e0f9",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#000022",
+                        "surface-dim": "#d4dbe1",
+                        "on-tertiary-fixed-variant": "#6b4d73",
+                        "secondary-fixed-dim": "#d3d2eb",
+                        "surface-bright": "#f7f9fc",
+                        "on-surface": "#2c3338",
+                        "tertiary-dim": "#66496e",
+                        "on-background": "#2c3338",
+                        "inverse-on-surface": "#9a9da0",
+                        "surface-variant": "#dce3e9",
+                        "on-secondary-fixed": "#3d3e51",
+                        "on-primary-fixed": "#000000",
+                        "on-tertiary-container": "#614469",
+                        "on-primary": "#fbf7ff",
+                        "outline": "#747c81",
+                        "outline-variant": "#acb3b9",
+                        "secondary-fixed": "#e1e0f9",
+                        "surface-container-highest": "#dce3e9",
+                        "on-error": "#fff7f7",
+                        "tertiary": "#72547a",
+                        "secondary": "#5c5d72",
+                        "primary-fixed-dim": "#6b72eb",
+                        "on-primary-fixed-variant": "#01005a",
+                        "on-secondary-container": "#4f5064",
+                        "primary": "#4a50c8",
+                        "tertiary-container": "#f6d0fd",
+                        "on-error-container": "#6e0523",
+                        "on-secondary-fixed-variant": "#595a6f",
+                        "on-secondary": "#fbf8ff",
+                        "tertiary-fixed": "#f6d0fd"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .neuromorphic-input {
+            box-shadow: inset 2px 2px 5px rgba(212, 219, 225, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+        }
+        .glass-btn {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(74, 80, 200, 0.8) 0%, rgba(120, 127, 249, 0.8) 100%);
+            box-shadow: 0 8px 32px 0 rgba(74, 80, 200, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .bg-ethereal {
+            background: linear-gradient(to bottom right, #f7f9fc, #eaeef3, #e1e0f9);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-ethereal min-h-screen flex items-center justify-center font-body text-on-surface p-4 sm:p-8">
+<div class="w-full max-w-md bg-surface-container-lowest rounded-xl p-8 shadow-[0_10px_40px_-10px_rgba(212,219,225,0.8)] relative overflow-hidden flex flex-col items-center">
+<!-- Background Decorative Element -->
+<div class="absolute -top-20 -right-20 w-40 h-40 bg-tertiary-container rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+<div class="absolute -bottom-20 -left-20 w-40 h-40 bg-secondary-container rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+<div class="mb-10 text-center relative z-10 w-full flex flex-col items-center">
+<div class="w-20 h-20 mb-4 rounded-full bg-surface-container-high flex items-center justify-center shadow-[inset_2px_2px_5px_rgba(212,219,225,0.5),inset_-2px_-2px_5px_rgba(255,255,255,0.5)]">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">movie</span>
+</div>
+<h1 class="text-3xl font-headline font-bold text-on-surface tracking-tight">Movie Diary</h1>
+<p class="text-on-surface-variant font-body text-sm mt-2">Your personal cinema sanctuary</p>
+</div>
+<form class="w-full space-y-6 relative z-10">
+<div>
+<label class="block text-sm font-label font-medium text-on-surface-variant mb-2 ml-1" for="email">Email</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4">
+<span class="material-symbols-outlined text-outline-variant text-xl">mail</span>
+</span>
+<input class="w-full pl-11 pr-4 py-4 bg-surface-container-high text-on-surface rounded-lg border-transparent focus:border-primary/30 focus:ring-0 transition-colors neuromorphic-input placeholder:text-outline-variant" id="email" placeholder="Enter your email" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-label font-medium text-on-surface-variant mb-2 ml-1" for="password">Password</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4">
+<span class="material-symbols-outlined text-outline-variant text-xl">lock</span>
+</span>
+<input class="w-full pl-11 pr-12 py-4 bg-surface-container-high text-on-surface rounded-lg border-transparent focus:border-primary/30 focus:ring-0 transition-colors neuromorphic-input placeholder:text-outline-variant" id="password" placeholder="Enter your password" type="password"/>
+<button class="absolute inset-y-0 right-0 flex items-center pr-4 text-outline-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center">
+<input class="w-4 h-4 text-primary bg-surface-container-high border-outline-variant/30 rounded focus:ring-primary/50 focus:ring-offset-0 transition-colors" id="remember" type="checkbox"/>
+<label class="ml-2 block text-sm font-label text-on-surface-variant" for="remember">Remember me</label>
+</div>
+<a class="text-sm font-label text-primary hover:text-primary-dim transition-colors" href="#">Forgot Password?</a>
+</div>
+<button class="w-full py-4 px-6 rounded-lg text-on-primary font-headline font-semibold text-lg glass-btn flex items-center justify-center gap-2 hover:opacity-90 transition-opacity mt-4" type="submit">
+<span>Login</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 text-center relative z-10 w-full border-t border-outline-variant/15 pt-6">
+<p class="text-sm font-body text-on-surface-variant">
+                Don't have an account? 
+                <a class="font-semibold text-primary hover:text-primary-dim transition-colors ml-1" href="#">Sign up</a>
+</p>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Movie Diary - Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#d3d2eb",
+              "secondary": "#5c5d72",
+              "primary-dim": "#3d43bc",
+              "on-tertiary-container": "#614469",
+              "outline": "#747c81",
+              "surface-tint": "#4a50c8",
+              "secondary-dim": "#505166",
+              "on-surface-variant": "#596065",
+              "surface-dim": "#d4dbe1",
+              "tertiary-container": "#f6d0fd",
+              "inverse-surface": "#0b0f11",
+              "on-primary-container": "#000022",
+              "on-background": "#2c3338",
+              "error-container": "#f97386",
+              "surface-container-high": "#e3e9ee",
+              "on-secondary-fixed-variant": "#595a6f",
+              "inverse-on-surface": "#9a9da0",
+              "on-surface": "#2c3338",
+              "primary-fixed-dim": "#6b72eb",
+              "tertiary": "#72547a",
+              "on-secondary-container": "#4f5064",
+              "outline-variant": "#acb3b9",
+              "on-tertiary-fixed-variant": "#6b4d73",
+              "on-secondary-fixed": "#3d3e51",
+              "error-dim": "#6b0221",
+              "on-primary-fixed": "#000000",
+              "on-error": "#fff7f7",
+              "primary-fixed": "#787ff9",
+              "secondary-container": "#e1e0f9",
+              "on-tertiary-fixed": "#4d3155",
+              "secondary-fixed": "#e1e0f9",
+              "tertiary-fixed-dim": "#e8c3ef",
+              "on-error-container": "#6e0523",
+              "background": "#f7f9fc",
+              "surface-bright": "#f7f9fc",
+              "inverse-primary": "#7d84fe",
+              "primary": "#4a50c8",
+              "on-secondary": "#fbf8ff",
+              "surface-variant": "#dce3e9",
+              "surface-container-low": "#f0f4f8",
+              "surface-container-highest": "#dce3e9",
+              "primary-container": "#787ff9",
+              "surface": "#f7f9fc",
+              "on-tertiary": "#fff7fb",
+              "error": "#a8364b",
+              "tertiary-fixed": "#f6d0fd",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-dim": "#66496e",
+              "surface-container": "#eaeef3",
+              "on-primary-fixed-variant": "#01005a",
+              "on-primary": "#fbf7ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .neu-inset {
+            box-shadow: inset 4px 4px 12px rgba(212, 219, 225, 0.4), 
+                        inset -4px -4px 12px rgba(255, 255, 255, 0.8);
+        }
+        .neu-card {
+            box-shadow: 4px 4px 12px rgba(212, 219, 225, 0.4), 
+                        -4px -4px 12px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.05)] flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold text-xl tracking-tight text-slate-800">Movie Diary</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden neu-card border-2 border-white">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a creative professional man with short hair and a warm smile in soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPkgdjfi0o7-gkKJwcpbXQ4tbZLLjXe7xp4rT4ixuESTqCcKibphmrE8y9I5wZM_L-QH_z6Bvs77g4NOsTJP7vvrNXETGc1Pb9BxP73TjSOq1LbLwoCGD8Sad5BZjY0WhQZM_BS2yorkPnXi_5VdgH-r5Z49a1wMTaN6cCQFxtiD8BTcQ0j-qdY72KegUPY2UcMIguEMBRI3PV6ltkn4Booey0PqkLEFxiWyDwIzpHvnTf9vqlzS-wzJtTXicSTJ0AJmxHMT_qeA4"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+<!-- Search Section -->
+<section class="mb-12">
+<h2 class="font-headline font-extrabold text-4xl mb-8 tracking-tight text-on-surface">Explore Cinema</h2>
+<div class="relative group">
+<div class="neu-inset bg-surface-container-high rounded-lg flex items-center px-6 py-5 transition-all focus-within:ring-2 focus-within:ring-primary/20">
+<span class="material-symbols-outlined text-outline mr-4" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-lg font-medium placeholder:text-outline-variant" placeholder="Search titles, directors, or genres..." type="text" value="Interstellar"/>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-headline font-bold text-sm shadow-lg shadow-primary-dim/20 hover:scale-105 active:scale-95 transition-all">
+                        Search
+                    </button>
+</div>
+</div>
+</section>
+<!-- Search Results Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+<!-- Result Card 1 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative rounded-lg overflow-hidden neu-card aspect-[16/10]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Wide cinematic shot of a spacecraft orbiting a massive Saturn-like planet with glowing rings and distant nebula stars" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXWN1idW-VI9EB5l-xMXpuczyzykZpCLVOAWIQcms5aRp-tJrbN_Aq1q_ccSLtcaWy2ZTbCf9Uqlp41MsjOpsYQM1Aem90UeYp1BUf8XC5x3nEcbV1_g-bvwHzIhBL5DkyavgvZg1ABotPyUBNrrxgygu16Qz957macOt0L2yOs2cthn8Y18KXD3bFM7c7mTDDpxt-t2_-uBZ_Z7IHxjVJUiym-xF5QN3oHr2L_6hgfg0DwNPEcH-AiDzJ6Y6BWa9TulOSMsV5-Bs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<!-- Glassmorphic Overlay -->
+<div class="absolute bottom-4 left-4 right-4 backdrop-blur-md bg-white/20 border border-white/30 rounded-md p-4 flex justify-between items-end">
+<div>
+<span class="block text-white/70 font-label text-[10px] uppercase tracking-widest mb-1">Sci-Fi • 2014</span>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Interstellar</h3>
+</div>
+<div class="flex items-center bg-white/90 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-amber-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold ml-1 text-slate-800">8.7</span>
+</div>
+</div>
+<!-- Overlapping Mini Poster -->
+<div class="absolute -top-4 -right-4 w-24 h-36 rounded-lg overflow-hidden shadow-2xl border-4 border-surface-container-lowest rotate-6 hidden md:block">
+<img class="w-full h-full object-cover" data-alt="Dark dramatic movie poster featuring a lone astronaut silhouette standing on a glowing alien ice planet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-6Ym5ImvmwEw_nHGXRS5q7VFvGt8GhI8khbLbiRbJT08C5mClv_gQqeXnNORwE2XVOz_ItEDuuwVF3c0_6EkRyz4Pknl93mo-Vd2O61m4UzeZJthT1QCqnPWeOheyYM162CjFpquaiCv5f9i40fTQdtOANmycbUEn5kOWeuYopxkEwhVh7OWRCAdzEG-w-Sgt0NgmDEHpSdUKU2iFW8hKKlDBFJ6VmB9HQeJp-FgXn08f6pdlSUJBhZDFaSsHndFuX1UH6yrXyDU"/>
+</div>
+</div>
+<div class="px-2">
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed">A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
+</div>
+</div>
+<!-- Result Card 2 -->
+<div class="group relative flex flex-col gap-4 lg:mt-12">
+<div class="relative rounded-lg overflow-hidden neu-card aspect-[16/10]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Cinematic close-up of vintage film camera lens with warm glowing reflections and soft bokeh of movie studio lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFZZBvtVG44EJwEFrup-CFczWUjg1hB_k49iwRAMWFCSFjpy-7ZSODA1Kb5ZlQ-BhAipj6eAIxiBGE0lYbvlg2QQIrbAhIGtp184ur1hm_B4wzZsCi9BktFvj0rUxfkoLE_ka0ktgLb54aY0e8VhDbL4gGMmTAk74NQ-W1ujZdQOgfGimPQNeAmY79m0jOn6JawL3sUXKCYJ9WnDzX13MI43a-mrnOgRMGAA1yCbnE4q4uqWA50Yq7i0FAPdZIy9Wd04utgkfdmrw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 backdrop-blur-md bg-white/20 border border-white/30 rounded-md p-4 flex justify-between items-end">
+<div>
+<span class="block text-white/70 font-label text-[10px] uppercase tracking-widest mb-1">Thriller • 2010</span>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Inception</h3>
+</div>
+<div class="flex items-center bg-white/90 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-amber-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold ml-1 text-slate-800">8.8</span>
+</div>
+</div>
+<div class="absolute -top-4 -right-4 w-24 h-36 rounded-lg overflow-hidden shadow-2xl border-4 border-surface-container-lowest -rotate-3 hidden md:block">
+<img class="w-full h-full object-cover" data-alt="Minimalist movie poster showing a spinning silver totem on a dark gray marble surface with sharp shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQiuoIi5bkjcezj4a7HDj76obzUmETve0lsrnkJCScybW2U18M7I_Wd7iQ47jXhucsWn5TMIdws2ckcqXjQfvwsZibR_ZoU9syQWBn_rGxu7yfQ19YpkZSiJB-By0UYKJJAnmat2h3NmRvQ0WSI6HDvWWG35K0olil3mIot7AkBzTuMdbVRuXD65044avSqlKvsQnX1Dz47Ra1CIVtQh-xXJPBWb0ouaNd8C_Ntg0hQzWktlIxnNSen7ir7UAuKgVM8OzYYwEXy_A"/>
+</div>
+</div>
+<div class="px-2">
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed">A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task.</p>
+</div>
+</div>
+<!-- Result Card 3 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative rounded-lg overflow-hidden neu-card aspect-[16/10]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Dramatic high-contrast still of a person looking at a giant digital billboard in a rainy futuristic neon city" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD_qRhlY9-2IzJsx9_Bsyl0eBJSZKJoKi6P5pEq6DB3mKWF4lqlTWqoibEg7EOxr3Cd9c1UfeopKu9tX2rbuiE5oyYwpFqWNJgFJt9U4-cFpuJCYyYvUlQnn1fYqY1MCGDhhon-6T2hwlS9o_NW5oqCMZ1ARmemSK848HwUnkIZOYWpPk1mc4vujz2nx3XvRlS5Gh23kS3YoszKJG75chbgQNom9FWzivYsRyCVoyUKoqKj4F54r8oiwlE4MoozP6UtwQN2T-C0Mg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 backdrop-blur-md bg-white/20 border border-white/30 rounded-md p-4 flex justify-between items-end">
+<div>
+<span class="block text-white/70 font-label text-[10px] uppercase tracking-widest mb-1">Drama • 2006</span>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">The Prestige</h3>
+</div>
+<div class="flex items-center bg-white/90 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-amber-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold ml-1 text-slate-800">8.5</span>
+</div>
+</div>
+<div class="absolute -top-4 -right-4 w-24 h-36 rounded-lg overflow-hidden shadow-2xl border-4 border-surface-container-lowest rotate-12 hidden md:block">
+<img class="w-full h-full object-cover" data-alt="Vintage stage magician poster with ornate gold lettering and a mysterious velvet curtain backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUOYBvzWh8WJeZlWwS9XA3ORQab8lzcb3lIlLJMKlAd3xYV4G_puM_Sa_paGDDK-a6bmIGyng3r9hKjiK6gjN6SjVZMLU-14gqekYOrUrJBR6kyxr_zb47kYfPYyPU8mavOBhgHpfvYDGEHT6yIwnfu-6ZAWhik5Kc0tHytPHpDa_bbe2M5CzWIIpUXh-Uxt4DixpubOREJwzGh2Q0JBvbpZAMxw8rChJJ2n8vEcdGXi9dyWgQR4UjSyq9ftIagpllJoqM-oTNtXw"/>
+</div>
+</div>
+<div class="px-2">
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed">After a tragic accident, two stage magicians in 1890s London engage in a battle to create the ultimate illusion.</p>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More (Asymmetric) -->
+<div class="mt-20 flex justify-center">
+<button class="relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary to-primary-container rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+<div class="relative flex items-center bg-surface-container-lowest px-10 py-4 rounded-full neu-card font-headline font-bold text-primary group-hover:text-primary-dim transition-colors">
+                    Load More Titles
+                    <span class="material-symbols-outlined ml-2 text-xl" data-icon="expand_more">expand_more</span>
+</div>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-2 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.05)] z-50">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-2xl px-5 py-2 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Diaries</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Profile</span>
+</a>
+</nav>
+</body></html>

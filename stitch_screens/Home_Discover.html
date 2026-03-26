@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#d3d2eb",
+              "secondary": "#5c5d72",
+              "primary-dim": "#3d43bc",
+              "on-tertiary-container": "#614469",
+              "outline": "#747c81",
+              "surface-tint": "#4a50c8",
+              "secondary-dim": "#505166",
+              "on-surface-variant": "#596065",
+              "surface-dim": "#d4dbe1",
+              "tertiary-container": "#f6d0fd",
+              "inverse-surface": "#0b0f11",
+              "on-primary-container": "#000022",
+              "on-background": "#2c3338",
+              "error-container": "#f97386",
+              "surface-container-high": "#e3e9ee",
+              "on-secondary-fixed-variant": "#595a6f",
+              "inverse-on-surface": "#9a9da0",
+              "on-surface": "#2c3338",
+              "primary-fixed-dim": "#6b72eb",
+              "tertiary": "#72547a",
+              "on-secondary-container": "#4f5064",
+              "outline-variant": "#acb3b9",
+              "on-tertiary-fixed-variant": "#6b4d73",
+              "on-secondary-fixed": "#3d3e51",
+              "error-dim": "#6b0221",
+              "on-primary-fixed": "#000000",
+              "on-error": "#fff7f7",
+              "primary-fixed": "#787ff9",
+              "secondary-container": "#e1e0f9",
+              "on-tertiary-fixed": "#4d3155",
+              "secondary-fixed": "#e1e0f9",
+              "tertiary-fixed-dim": "#e8c3ef",
+              "on-error-container": "#6e0523",
+              "background": "#f7f9fc",
+              "surface-bright": "#f7f9fc",
+              "inverse-primary": "#7d84fe",
+              "primary": "#4a50c8",
+              "on-secondary": "#fbf8ff",
+              "surface-variant": "#dce3e9",
+              "surface-container-low": "#f0f4f8",
+              "surface-container-highest": "#dce3e9",
+              "primary-container": "#787ff9",
+              "surface": "#f7f9fc",
+              "on-tertiary": "#fff7fb",
+              "error": "#a8364b",
+              "tertiary-fixed": "#f6d0fd",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-dim": "#66496e",
+              "surface-container": "#eaeef3",
+              "on-primary-fixed-variant": "#01005a",
+              "on-primary": "#fbf7ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .neu-pressed {
+            background: #f0f4f8;
+            box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+        }
+        .neu-flat {
+            background: #ffffff;
+            box-shadow: 4px 4px 12px rgba(212, 219, 225, 0.4), -4px -4px 12px rgba(255, 255, 255, 0.9);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-4">
+<button class="text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-2xl font-black text-slate-800 dark:text-slate-100 italic font-['Plus_Jakarta_Sans'] tracking-tight">Movie Diary</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-8 font-headline font-bold text-sm tracking-wide">
+<a class="text-indigo-600 dark:text-indigo-400" href="#">Home</a>
+<a class="text-slate-400 dark:text-slate-500 hover:opacity-80" href="#">Explore</a>
+<a class="text-slate-400 dark:text-slate-500 hover:opacity-80" href="#">Library</a>
+</nav>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container shadow-sm hover:opacity-80 transition-opacity cursor-pointer">
+<img alt="User profile" data-alt="close-up portrait of a smiling young man with clean features and professional lighting against a soft grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGjIzcCm7FgrjuZ09BkFpIOCdrrA4FCfQP7fUv2ZfwmI4hFcrWrya7BDfuJWnmZXbpHfEql1vJQ-RRcLpGJ8Si-wssrE3jy7BndfQJy59K3L684qM0uqgOD3IwOpUFX75L5iWPdXSLq65wSjAv13E7N8cIkq32XfFbCc5mc9TaA5V1q9AL8UUM2p8PmFwSPUxfFORXAO_lN0JdpOHZroMiM6kVdxN72X_JnfHPm54J_RVVSwJ18Z_GI5e5Nh2eszMhckRDzfg5PrY"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto space-y-12">
+<!-- Hero Section: Featured Movies -->
+<section>
+<div class="flex items-end justify-between mb-8">
+<div>
+<span class="text-primary font-headline font-extrabold tracking-widest text-[10px] uppercase block mb-2">Cinematic Spotlight</span>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface leading-tight">For Your Archive</h2>
+</div>
+<div class="hidden md:flex gap-3">
+<button class="neu-flat p-3 rounded-full text-primary hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="neu-flat p-3 rounded-full text-primary hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="relative group">
+<div class="aspect-[21/9] w-full rounded-lg overflow-hidden shadow-2xl relative">
+<img class="w-full h-full object-cover" data-alt="dramatic cinematic wide shot of a futuristic neon-lit city at night with rain reflecting on the dark pavement and deep blue atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf-J1W5eYYkMTw6a9oa4hi1NxyLgLzwKZ7-5w1gb6KKca4t0GqIH1NLoc5Gn5HB6BXcu4tIdfRIazw8VHbIg4lEMNUoOWOYkoimfnsNH75s0CtI3BmfUdeha4J5XDwkizB_aqvNj3tED83GzFY7ONEoohhDLdQvv8rtVGjWNFobrty3Vx-LE8oTjNueA6j7CY-B9u0UcVX4rZe4us_0S4ZOMCU-kHl-avb5ekFRg7mJghOi4-LYj57KK4FBCIlp6uoYBoH8VIRI3Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent"></div>
+<!-- Glassmorphic Info Card -->
+<div class="absolute bottom-8 left-8 right-8 md:right-auto md:w-[480px] glass-panel p-8 rounded-lg border border-white/20 shadow-2xl">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Sci-Fi Epic</span>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.9</span>
+</div>
+</div>
+<h3 class="text-3xl font-headline font-extrabold mb-3 text-on-surface">Neon Horizon: 2049</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">A visual masterpiece exploring the boundaries of human consciousness in a world of artificial light and shadows.</p>
+<div class="flex gap-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-3 rounded-md font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                                Add to Diary
+                            </button>
+<button class="neu-pressed px-8 py-3 rounded-md font-headline font-bold text-sm text-primary active:scale-95 transition-all">
+                                Watch Trailer
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Diaries Carousel -->
+<section>
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-2xl font-headline font-bold text-on-surface">Community Diaries</h3>
+<a class="text-primary font-label font-bold text-sm hover:underline" href="#">Explore all</a>
+</div>
+<div class="flex gap-6 overflow-x-auto hide-scrollbar pb-6 -mx-4 px-4">
+<!-- Diary Card 1 -->
+<div class="flex-none w-72 group">
+<div class="neu-flat p-4 rounded-lg transition-transform group-hover:-translate-y-2">
+<div class="relative h-48 rounded-md overflow-hidden mb-4">
+<img class="w-full h-full object-cover" data-alt="black and white aesthetic photo of a vintage film camera on a wooden desk with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuS5C5RATymLxzS94NQVd98f1myLWjBoYGOGQPSbjRDgdjgJ_vBGjiPIlHtk_XgPbaW00f4h3dCT8ZvnnunlydL71zHD_dtZSEH2jlKV-ba9hei6doEQZXH78suMIJyi586VrEmGQtSjDnxKlSPH-OsPN7xAd-05G95v4Z4TP1iWyoZuRQXrDKKev9KVQrGLiuyjGuizZmHPHPzoFUjFfF09TKd29LQy_MYpcx5UhpnLIljyG3bvbRrzioyCTxkcB1WQPF_9qU7zk"/>
+<div class="absolute top-3 left-3 flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img alt="avatar" data-alt="portrait of a woman with a warm smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmMI8Gl11oLWtkYUtUzvtjufvPa1y194DQLtV6VdXKWAzja0rzR56873Hi0qWlaeZ84NBB0SjFvMn0p0JW3nrNQAuVK5tdwTsOKpOubJIn-0LoN33ZHrgujwM0KKT8Wjxs7JnFpCSByypGyKzLFexFmE-UosT84lwV9FUllMjD5hLW5wpj1GP28TKq2LPOLE0RScHrseqqy8IU8dHw7mDBF1JJnf0P7gsa9xXJfOFZdqo130o66-XyJs_tpJP_6Nfbto0YT9nBQjc"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-primary text-[8px] flex items-center justify-center text-white font-bold">+12</div>
+</div>
+</div>
+<h4 class="font-headline font-bold text-on-surface mb-1">Aesthete's Collection</h4>
+<p class="text-on-surface-variant text-xs mb-4">Curated by Sarah Jenkins • 24 movies</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold text-on-surface-variant">1.2k saves</span>
+</div>
+</div>
+</div>
+<!-- Diary Card 2 -->
+<div class="flex-none w-72 group">
+<div class="neu-flat p-4 rounded-lg transition-transform group-hover:-translate-y-2">
+<div class="relative h-48 rounded-md overflow-hidden mb-4">
+<img class="w-full h-full object-cover" data-alt="moody cinema auditorium with empty red velvet seats and a glow from the screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD19Zegu5cQAqS67OmnhIB27vJvVLqclwQeMiXY1So8DAeRp0BE9_CpzBXWDtA41VISq7nLZ-FbAhO_F-WaKfLF72_yEK4vF0H29gMCvKirz8h7d9dvClA1dMrvVCmozwjCs7P0NzELVUGjN1xxvjFShZYdRhivgEB-vqb1uo8w5c95IU-VhlWUZjXdAWLdPIj78ruXI7CiuaKgV7zsGb8O5ByGNzKnVPsL1Jx2O9l4OdhUxHx0O8ZCgDmhVUVA4h_4rK55oFlSnWI"/>
+<div class="absolute top-3 left-3">
+<div class="w-6 h-6 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img alt="avatar" data-alt="portrait of a man with glasses looking thoughtfully" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5DHlNlZqetqFiUxW7xL1d0ebAlhFbtaUGX95L2B9JJhyVUR2mofqujd9bGPMIwO2I7bR0tG0YW-0BjDrToAym3EtCIU9KRwXmgCyOiXvP8Vcz_BR5hay1X3pJoEsjBrTLh_krRREHQxp2n67ycy12heU54vF1eTONTn7eLUvN_E9giCxmZSEYuJGoKzo1Z__GKJusBCgDv2Q5olxCkvJnISgO-UMglrU-y7i1RH8hPjv0waEXdpcRodpKnW2K8sXpEb1XvwpPYw8"/>
+</div>
+</div>
+</div>
+<h4 class="font-headline font-bold text-on-surface mb-1">Forgotten Classics</h4>
+<p class="text-on-surface-variant text-xs mb-4">Curated by Marcus T. • 15 movies</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold text-on-surface-variant">856 saves</span>
+</div>
+</div>
+</div>
+<!-- Diary Card 3 -->
+<div class="flex-none w-72 group">
+<div class="neu-flat p-4 rounded-lg transition-transform group-hover:-translate-y-2">
+<div class="relative h-48 rounded-md overflow-hidden mb-4">
+<img class="w-full h-full object-cover" data-alt="vibrant neon signs and colorful lights in a busy urban alleyway at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuRzPILVkVoRDS1Rq4ZzuS_ZD9SjrpbNs1McRLH8IbIVd-8bnaViIhD_HhoPvOhNC4eVP3KmX_mvIuMhXIziDPhvfSXrpeXpZ6ommXTJhw6-VXsYSxshBKXDPKojLS6ORbvlqTaxqpA0Q-XjKExNzRx9zwLoQWFtc41xq4_qJPSuSQtngZI-jgkKtO32A8DU0TTdugq3hj36C8Ns7hY697l0dXmmlXygc8hvAfAbXUYdlITMXIGj7OQt7vle4KGkpixxNtOZRHU-k"/>
+<div class="absolute top-3 left-3">
+<div class="w-6 h-6 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img alt="avatar" data-alt="portrait of a professional woman with a soft expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO7JpWY0_Wu5iP6u_3T5qGYj3K86lWxQCi9aG1aGqF2ZuixKHEah6a7v1wD9SeEEbTVR7rWjaHbQgaQ4Fa48hLNTesMFp9cboZtMVXFFVEeCy5gQkBOzVzyYMpRKZqMVFtxvTakmfktkOQDr9_oyNKN6XexjMuwfyo6yMQEq-EmoGHRiQ4NR6mh0QqvmAuYvD85yHKEOuV1XCTQCoJyJL8HIZNSr0Cmq2Wht7EXxvyrRPtY40o8Ckqik-LhMC9jekQB5yfGtvvnLo"/>
+</div>
+</div>
+</div>
+<h4 class="font-headline font-bold text-on-surface mb-1">Cyberpunk Dreams</h4>
+<p class="text-on-surface-variant text-xs mb-4">Curated by Elena V. • 32 movies</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold text-on-surface-variant">3.4k saves</span>
+</div>
+</div>
+</div>
+<!-- Diary Card 4 -->
+<div class="flex-none w-72 group">
+<div class="neu-flat p-4 rounded-lg transition-transform group-hover:-translate-y-2">
+<div class="relative h-48 rounded-md overflow-hidden mb-4">
+<img class="w-full h-full object-cover" data-alt="close up of an old fashioned popcorn machine with golden kernels popping" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG2FpCE3ogo8e7hSGq5YAzVW3QKxnY1UlqBCKRF0iBXXj1xONjY68GvL8-WzwOi-8BmkKShHkxDmhi7Sry5jlEGerksxSrcjnKx6vglATN0BXK8R3YSptR9xLMS9e-EA_MMTsgpuDDZXWKUBu26G3EALSqLV728uD2JBDj_ifg8z2FLaTxv3Cf8etV7oLdonjY-QbKx_XW4dWhR1Fkrof0f_Ifq0IzOKgH0YyZpJFBHR93-3MsHK8GqCA2NXJu_JRSPLcas6obfZ4"/>
+<div class="absolute top-3 left-3">
+<div class="w-6 h-6 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img alt="avatar" data-alt="smiling man in casual wear against a blurred outdoor background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtT4j4c7AsjDp1mAeXB5lattGMtC8RV1TBQdXxgm4iswUtLCgZMOS0jeDCTioOa6NCv75zHPwNw6JFdphOPiTkC294wnQjQECFX1tfqCsPfR9byqccVavcGBHcOCLrt-1kJTslfdW3hlziLx11TnnUpRbpQc-b2ErY9adcH3-72B0hBO9mn4WkJy98yrryCNLRKz-422WE61QvyMM39gjwBysZvXAsl_tm17FALMOcZwQDElZA-0pNy4ouM2IC-rSRGu5_ZEiyL3s"/>
+</div>
+</div>
+</div>
+<h4 class="font-headline font-bold text-on-surface mb-1">Comfort Watches</h4>
+<p class="text-on-surface-variant text-xs mb-4">Curated by David Kim • 10 movies</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold text-on-surface-variant">2.1k saves</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Recommendations: Bento Grid -->
+<section>
+<div class="mb-8">
+<h3 class="text-2xl font-headline font-bold text-on-surface">Tailored For You</h3>
+<p class="text-on-surface-variant text-sm">Based on your love for Atmospheric Thrillers</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Large Featured Bento -->
+<div class="md:col-span-2 md:row-span-2 relative group rounded-lg overflow-hidden shadow-lg">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="cinematic close up of a retro television set showing static in a dark room with moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTB8szfHNAlXTjWo-HriW-STseq6wiSZ4O2Eh3b52WTRTIKoSrPDDSuB5gf6e0wT8ZViiUmSV5IYMfcSrpcY7Zz-6mqov-7WkdHKXBTwBBHqAUWrBCJqpW5AOpcD0P2UddwmsRwzVSblAEwkGJvEAwAhg1aBQd1nhFnWIuaTSwB4M5BZYEIvQjmB_liBzd4_w21CzwbmKI8wREnCld7Xol-pmKJz6vXuh11oProUeYq2JRHBt3K717BO_ou5UDZGm_0K8F1KO3nEs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6">
+<h4 class="text-white text-2xl font-headline font-bold mb-2">The Silent Signal</h4>
+<p class="text-white/70 text-sm mb-4">Mystery • 2h 15m • 2023</p>
+<div class="flex items-center gap-3">
+<button class="bg-white text-on-surface px-6 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-white transition-colors">Details</button>
+<button class="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Smaller Bento Cards -->
+<div class="neu-flat p-4 rounded-lg flex gap-4 items-center group">
+<div class="w-20 h-28 rounded-md overflow-hidden flex-none shadow-md">
+<img class="w-full h-full object-cover" data-alt="surreal image of a person floating in a starry nebula with soft purples and blues" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOxav0DUIDx-LgH9E__MNrPdeawKlLoie6Nxg811ubPapXbDAG1TRWKZ-liosE035gdlUUzWf0uUcczwN0HtvlO_GypARhE_5gOfrMLy_px336ddIYcZppsi11X5zghyZrkRMVxcNf4obCmNsfT1SKzymSkwuTYF0ruvEW8eYUianjXD2aQTMkn_Dj1SDgqutMYzzPvhucclvo4v1LjyZMgMQHvB-_jjJLgMg3Yls6vyGMcRuA6kl4iUjX_V20lcIDU8zJCQJPPd0"/>
+</div>
+<div>
+<h5 class="font-headline font-bold text-sm text-on-surface">Echoes of Void</h5>
+<p class="text-[10px] text-on-surface-variant mb-3">Sci-Fi • 4.5 ★</p>
+<button class="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                            Add <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="neu-flat p-4 rounded-lg flex gap-4 items-center group">
+<div class="w-20 h-28 rounded-md overflow-hidden flex-none shadow-md">
+<img class="w-full h-full object-cover" data-alt="dramatic profile of a detective in a trench coat standing under a flickering street lamp in the fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJZOBKX9CgG11bNXW0xBhMSEkr6dwUCep6e6bwWJ0NAIbt8-x6yZuvxu-CQpVqyYJ_H9fZsW9AVWcnP_LMD-XFJsdsAUBUm6ZdKN4k-52jL4c6i5iHo9bYFVdi0L1XOBTOIdBiHcj8WfQ0n91QvJtYsHuAbDLngRWwXwCy5mLqiD2cxXsgIAkQpYIxKH4JLcckS8jEMkqYeIF4SmizQ7SXUsQ8DAQCp1zQUXtZmZM5MxCa-lsCPPKWRWi-3CiYOhURbXxWDKtMxBM"/>
+</div>
+<div>
+<h5 class="font-headline font-bold text-sm text-on-surface">Shadow Pursuit</h5>
+<p class="text-[10px] text-on-surface-variant mb-3">Noir • 4.2 ★</p>
+<button class="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                            Add <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="neu-flat p-4 rounded-lg flex gap-4 items-center group">
+<div class="w-20 h-28 rounded-md overflow-hidden flex-none shadow-md">
+<img class="w-full h-full object-cover" data-alt="tranquil scene of a small cottage by a lake during a soft lavender sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATPZTUvJ3C77h2BMiSN9xaIDeDg3UfG-u2smSmqiwqAyZV2inITbSzb1N4TjFTp1UgNEEzbAnBujJXn5dgaWWHJssBGy0rrqdoW4eNWRGeJhQE6PbF5Opnsc5ikdubngI9ZCGPp_InfvEw_tOyqG1cM5-Cw71KOmR_vPpr2Ip8EBzucgYIwWrtnnuiR-fOMWyncJi1SHnzQdws0S4SWRDr9VFzyBwDupoBsovvrK0bCUYN422RbhU92d-fodKCu9rMDLtR4qk6ri8"/>
+</div>
+<div>
+<h5 class="font-headline font-bold text-sm text-on-surface">Lake Serene</h5>
+<p class="text-[10px] text-on-surface-variant mb-3">Drama • 4.8 ★</p>
+<button class="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                            Add <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="neu-flat p-4 rounded-lg flex gap-4 items-center group">
+<div class="w-20 h-28 rounded-md overflow-hidden flex-none shadow-md">
+<img class="w-full h-full object-cover" data-alt="lush deep forest with sunlight breaking through massive ancient trees creating a magical atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmfvLGyBx4cnBbuC67ZA2kJ1J6RgdwZt4oj9bOYPfj20ddQvTmVZOzcWOtM3XZwHck6SIGWFCtwhKzpcsZTTrcgxGtCHhm4EmZkN9QszyCZLhWnV6Qhzjrl6auyCgqrmtqMhwfPEuQ097fRTWimbqdmQUle6U4T5ITKDkSq8f9mTaB7mJt9OmXXUrgWcLqLcHZetyoT-_e5DpYCYyr4tXZX3clzAZ0d1QKBpr1iyyXDPBl5OTY3XzQtqneY8yFJOEafsWrgosipZM"/>
+</div>
+<div>
+<h5 class="font-headline font-bold text-sm text-on-surface">Wild Roots</h5>
+<p class="text-[10px] text-on-surface-variant mb-3">Nature • 4.9 ★</p>
+<button class="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                            Add <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-2 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl z-50 rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-2xl px-5 py-2 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Diaries</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 tap-highlight-none active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Profile</span>
+</a>
+</nav>
+</body></html>

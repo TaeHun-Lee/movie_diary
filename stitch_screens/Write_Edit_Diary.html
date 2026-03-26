@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Ethereal Archive - Edit Diary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-primary": "#7d84fe",
+                        "secondary-dim": "#505166",
+                        "primary-fixed": "#787ff9",
+                        "primary": "#4a50c8",
+                        "error-container": "#f97386",
+                        "surface-container-highest": "#dce3e9",
+                        "on-tertiary-fixed": "#4d3155",
+                        "tertiary-fixed-dim": "#e8c3ef",
+                        "background": "#f7f9fc",
+                        "on-secondary": "#fbf8ff",
+                        "surface-container-low": "#f0f4f8",
+                        "on-error": "#fff7f7",
+                        "inverse-on-surface": "#9a9da0",
+                        "on-tertiary-fixed-variant": "#6b4d73",
+                        "error-dim": "#6b0221",
+                        "on-secondary-container": "#4f5064",
+                        "surface-tint": "#4a50c8",
+                        "surface-container": "#eaeef3",
+                        "surface-container-high": "#e3e9ee",
+                        "tertiary-fixed": "#f6d0fd",
+                        "surface-bright": "#f7f9fc",
+                        "on-error-container": "#6e0523",
+                        "on-tertiary": "#fff7fb",
+                        "primary-fixed-dim": "#6b72eb",
+                        "outline-variant": "#acb3b9",
+                        "on-surface": "#2c3338",
+                        "on-primary-fixed-variant": "#01005a",
+                        "surface-dim": "#d4dbe1",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-dim": "#3d43bc",
+                        "secondary-fixed": "#e1e0f9",
+                        "on-secondary-fixed-variant": "#595a6f",
+                        "tertiary-container": "#f6d0fd",
+                        "secondary-fixed-dim": "#d3d2eb",
+                        "primary-container": "#787ff9",
+                        "surface-variant": "#dce3e9",
+                        "on-secondary-fixed": "#3d3e51",
+                        "on-primary": "#fbf7ff",
+                        "inverse-surface": "#0b0f11",
+                        "secondary": "#5c5d72",
+                        "outline": "#747c81",
+                        "error": "#a8364b",
+                        "secondary-container": "#e1e0f9",
+                        "tertiary": "#72547a",
+                        "surface": "#f7f9fc",
+                        "on-primary-container": "#000022",
+                        "on-surface-variant": "#596065",
+                        "tertiary-dim": "#66496e",
+                        "on-background": "#2c3338",
+                        "on-tertiary-container": "#614469",
+                        "on-primary-fixed": "#000000"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .inset-neuromorphic {
+            box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+        }
+        .soft-neuromorphic {
+            box-shadow: 6px 6px 12px #d1d9e6, -6px -6px 12px #ffffff;
+        }
+        .soft-neuromorphic-active {
+            box-shadow: inset 2px 2px 5px #b8bec9, inset -2px -2px 5px #ffffff;
+        }
+        body {
+            background-color: #f7f9fc;
+            font-family: 'Manrope', sans-serif;
+            color: #2c3338;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-[0_4px_12px_rgba(227,233,238,0.4)] dark:shadow-none">
+<div class="flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-indigo-600 dark:text-indigo-400 hover:bg-slate-100/50 transition-colors p-2 rounded-full active:scale-95 duration-200">arrow_back</button>
+<span class="text-xl font-extrabold text-slate-900 dark:text-slate-50 font-['Plus_Jakarta_Sans'] tracking-tight">The Ethereal Archive</span>
+</div>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-container/30">
+<img alt="User Profile" data-alt="close-up portrait of a man with friendly expression against a neutral studio background soft cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIBNlXuKs5ekOeph98dGQls4kVU0qDC5-mUhALkqz81TLiqmCJXl7so2PfI2V7zJD--2rR4i_Qs8TZchM-3ENt2r5QtJmeMpeN_bydwROtmtljXxXI66kHWuA4nFExoYo0XueHB3psp3wn3B2MAtKEhrAwlpTdjs5kLdCBvo_u85AtA10rY_w844bWC8_IFVrBiAssIj62iz2oqzrN7H17v7hgl3gwAcf4by8410dgyDGn2p9YL1yUrkId8zFy7n17XyWNEb5qq6Y"/>
+</div>
+</div>
+<div class="bg-slate-100/50 dark:bg-slate-800/50 h-px w-full"></div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto space-y-10">
+<!-- Movie Context: Glassmorphic Card -->
+<section class="relative group">
+<div class="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-tertiary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-70 transition-opacity"></div>
+<div class="relative glass-card rounded-lg p-5 flex items-center gap-6 overflow-hidden border border-white/40 shadow-sm">
+<div class="w-24 h-36 rounded-md overflow-hidden flex-shrink-0 shadow-lg rotate-[-2deg]">
+<img alt="Movie Poster" class="w-full h-full object-cover" data-alt="cinematic movie poster of a glowing futuristic city at night with neon blue and purple accents and soft mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6Wc2_N0xgAaJ29F6oOBdd2Vx8q63m5aG_akmJg6qBINkLR8VXNkaoeM71qwMLsEOawdYZ8Zz4MWwWs3HVPDBaC8p3yyfSCBdT8XBgfN91T0UsYIqNZE3oXcOquBwXdJQz84K0SzU3rEXwgDPZy9bLp25dj8Ly7qOviV3lB45T3kFJ4gdKLmdUJ8M1guMvT2-ylD_spt-G7x9JZdhlx-kqQY9r_Cm3RNv2YuaueeKjyonx8-E8yTm2gatnii2e8pWdAv--ccbXZow"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-headline text-2xl font-bold text-on-surface tracking-tight">Interstellar</span>
+<span class="font-label text-sm text-on-surface-variant font-medium opacity-70">2014 • Christopher Nolan</span>
+<div class="mt-2 flex gap-2">
+<span class="bg-surface-container-highest px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-on-secondary-container">Sci-Fi</span>
+<span class="bg-surface-container-highest px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-on-secondary-container">Adventure</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Diary Details Form -->
+<div class="space-y-8">
+<!-- Inputs Group -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-headline text-sm font-bold text-on-surface ml-2">Diary Name</label>
+<input class="w-full h-14 px-6 bg-surface-container-high rounded-md border-none inset-neuromorphic focus:ring-2 focus:ring-primary/30 transition-all font-body text-on-surface placeholder:text-outline/50" placeholder="Summer Solstice Rewatch" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-headline text-sm font-bold text-on-surface ml-2">Watch Date</label>
+<div class="relative">
+<input class="w-full h-14 px-6 bg-surface-container-high rounded-md border-none inset-neuromorphic focus:ring-2 focus:ring-primary/30 transition-all font-body text-on-surface" type="date" value="2023-10-27"/>
+</div>
+</div>
+</div>
+<!-- Review Section: Interactive Rating -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="font-headline text-sm font-bold text-on-surface ml-2">Movie Rating</label>
+<span class="text-primary font-bold text-xl font-headline">9<span class="text-sm opacity-50">/10</span></span>
+</div>
+<div class="flex flex-wrap gap-3 justify-center md:justify-between bg-surface-container-low p-6 rounded-lg">
+<!-- Rating Buttons -->
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">1</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">2</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">3</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">4</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">5</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">6</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">7</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">8</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-white soft-neuromorphic-active text-primary ring-2 ring-primary/20 scale-110">9</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-container-low soft-neuromorphic text-on-surface-variant hover:text-primary transition-colors">10</button>
+</div>
+</div>
+<!-- Diary Content -->
+<div class="space-y-2">
+<label class="font-headline text-sm font-bold text-on-surface ml-2">Diary Content</label>
+<div class="p-1 bg-surface-container-high rounded-lg inset-neuromorphic">
+<textarea class="w-full p-6 bg-transparent border-none focus:ring-0 font-body text-on-surface leading-relaxed resize-none" placeholder="Describe your emotional journey through the stars..." rows="8"></textarea>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col md:flex-row gap-4 pt-4">
+<button class="flex-1 h-14 rounded-md bg-gradient-to-br from-primary to-primary-container text-white font-headline font-bold text-lg shadow-lg shadow-primary-dim/20 active:scale-95 duration-200">
+                    Save Diary
+                </button>
+<button class="flex-1 h-14 rounded-md bg-surface-container-low text-on-surface-variant font-headline font-bold text-lg border border-outline-variant/10 hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+                    Cancel
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 w-full rounded-t-[2rem] z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl shadow-[0_-8px_24px_rgba(227,233,238,0.3)]">
+<div class="flex justify-around items-center px-4 pt-3 pb-8 w-full">
+<!-- Home -->
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</div>
+<!-- Search -->
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">search</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</div>
+<!-- Diaries (ACTIVE) -->
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-indigo-500 to-indigo-400 text-white rounded-2xl px-5 py-2 shadow-lg shadow-indigo-200/50 active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Diaries</span>
+</div>
+<!-- Profile -->
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</div>
+</div>
+</nav>
+</body></html>

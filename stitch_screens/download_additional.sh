@@ -1,0 +1,15 @@
+#!/bin/bash
+cd /media/einzlth/T7/Projects/movie_diary/stitch_screens
+
+# 1. Logo
+curl -L -s -o Logo.png "https://lh3.googleusercontent.com/aida/ADBb0uj1TPGvjYNIdwxk8m7vw67i8LdvAS5vBRuOweDHtT13W_kP4ueX6eMxPr_fEfnOBXB-fwz1PjgMb4YaPFmgTah3PgOZ0WVt7jJEKHp-ICM8tKhPB3jS3_dZsgiVHafBIamm40Jp7-SDlDePghzVE_sl659ElPJEF9UH5V0CzyGygwDT5kPgz7U6YNAe7b2xCij4oUkQmNO9sUJmLrkLm-OqnO1Py3p15gl-cFVYA5qH4ocqzftVcFmwR6w"
+
+# 2. Login
+curl -L -s -o Login.png "https://lh3.googleusercontent.com/aida/ADBb0uiSqBAInD9En3wNi9cMuOpRMLa6kdaUj69ZC75OpKN_DN_7-ZGIQhNNJ9LtwHylLTzIXaaj1S0bFK331vrCdxMEOuCaL3_tWU0m5pXnu404z7hNnKiDKwSrfLh_JlBroi-gsFMrk1-CCedDlJnk4dsXDKISVv56jh4Cio9pMEhVOqTUz0dhp2i-_GSfEJztByv32D3CbJGc5JFiqP0UONyfmi-5EgLqjMUjVd17lKECt1hw2DM9qilXGeo"
+curl -L -s -o Login.html "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzY5NTkxZTk0OTNlNjQ1MzE4ZGNiNDE3ZWFiZDNmMWE1EgsSBxD0v4esvRsYAZIBIwoKcHJvamVjdF9pZBIVQhM0NDM0MzAzOTUyOTE2MjIyNjkz&filename=&opi=89354086"
+
+# 3. Sign Up
+curl -L -s -o Sign_Up.png "https://lh3.googleusercontent.com/aida/ADBb0ugItY7MnW4-3j7-YNKj3By_3Bkc4RXIgJdqsoTuBvR_Df_OAhETNLgI7EVe6-Fptq66eme0gpb4bpUGkyCjsDkksojWZdQ1HZIZ2zL9ELn7mSX2xyZchI7dgE0j9SpU8fU-WOpcr4Kt22L6DWQq4D0nBqayn_ioEo5tjqSHBQocq3dfTWKCj9btKIDBueQxqQ5kMu9vN6Nn1Kyb-cfoTeHzQ5XgwDkkHYZwEHP-RAMDXYXLOVFwvMUhkSU"
+curl -L -s -o Sign_Up.html "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sX2ZjNjNiZWYyYTEwNDQxZTE5NzljYWI1MGVmZTE0MmY2EgsSBxD0v4esvRsYAZIBIwoKcHJvamVjdF9pZBIVQhM0NDM0MzAzOTUyOTE2MjIyNjkz&filename=&opi=89354086"
+
+echo "Download additional screens completed."

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Movie Detail - Movie Diary</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;0,800;1,800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#d3d2eb",
+              "secondary": "#5c5d72",
+              "primary-dim": "#3d43bc",
+              "on-tertiary-container": "#614469",
+              "outline": "#747c81",
+              "surface-tint": "#4a50c8",
+              "secondary-dim": "#505166",
+              "on-surface-variant": "#596065",
+              "surface-dim": "#d4dbe1",
+              "tertiary-container": "#f6d0fd",
+              "inverse-surface": "#0b0f11",
+              "on-primary-container": "#000022",
+              "on-background": "#2c3338",
+              "error-container": "#f97386",
+              "surface-container-high": "#e3e9ee",
+              "on-secondary-fixed-variant": "#595a6f",
+              "inverse-on-surface": "#9a9da0",
+              "on-surface": "#2c3338",
+              "primary-fixed-dim": "#6b72eb",
+              "tertiary": "#72547a",
+              "on-secondary-container": "#4f5064",
+              "outline-variant": "#acb3b9",
+              "on-tertiary-fixed-variant": "#6b4d73",
+              "on-secondary-fixed": "#3d3e51",
+              "error-dim": "#6b0221",
+              "on-primary-fixed": "#000000",
+              "on-error": "#fff7f7",
+              "primary-fixed": "#787ff9",
+              "secondary-container": "#e1e0f9",
+              "on-tertiary-fixed": "#4d3155",
+              "secondary-fixed": "#e1e0f9",
+              "tertiary-fixed-dim": "#e8c3ef",
+              "on-error-container": "#6e0523",
+              "background": "#f7f9fc",
+              "surface-bright": "#f7f9fc",
+              "inverse-primary": "#7d84fe",
+              "primary": "#4a50c8",
+              "on-secondary": "#fbf8ff",
+              "surface-variant": "#dce3e9",
+              "surface-container-low": "#f0f4f8",
+              "surface-container-highest": "#dce3e9",
+              "primary-container": "#787ff9",
+              "surface": "#f7f9fc",
+              "on-tertiary": "#fff7fb",
+              "error": "#a8364b",
+              "tertiary-fixed": "#f6d0fd",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-dim": "#66496e",
+              "surface-container": "#eaeef3",
+              "on-primary-fixed-variant": "#01005a",
+              "on-primary": "#fbf7ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .neu-button {
+        background: #f0f4f8;
+        box-shadow: 4px 4px 12px rgba(212, 219, 225, 0.4), 
+                    -4px -4px 12px rgba(255, 255, 255, 1);
+      }
+      .neu-button:active {
+        box-shadow: inset 4px 4px 12px rgba(212, 219, 225, 0.4), 
+                    inset -4px -4px 12px rgba(255, 255, 255, 1);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen pb-28">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.05)] flex items-center justify-between px-6 py-4">
+<button class="text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 28px;">arrow_back</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold text-xl tracking-tight text-slate-800 dark:text-slate-100">Movie Diary</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User profile" data-alt="close-up portrait of a smiling young man with neat hair against a soft blue studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdeWXSDRjArYWDUM8Qa_YedN0VMASNcCo47bqPLNVUonYoh2YlI21y8jR7Jmq-dcjSEYHW0IECkRE_Z51nwsnJ1FwDHh6Gyakaxfp5LnkdImGfEyPg-AIld9tbGabzBS2ZjAyMERC3gGTsLjV07199KMpEL4dEx1qc4wGxZcmiyX5j9hg3KjLNTQHwkExAfPyT-0Ip2WcfDK5zxIEbsPK1h-_ox_M-8kD0tZrMBwjTXKPh3Jf6AXCqxYLepEZW2j3eMLQyUTMKeCo"/>
+</div>
+</header>
+<main class="w-full">
+<!-- Hero Section -->
+<div class="relative w-full h-[530px] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="dramatic cinematic wide shot of a futuristic neon-lit city street at night with rain reflecting on the pavement and misty atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjtiMl-Esd4O-w3xXsXdDYEhNq7WEfNT1Qetj4KlZoR2GD9QoV4i-0rTTr7P9tyfUuG0CGBn_FMlary6JaHJ4ejFBZWKXZbQk9lLRSj8E17II23UMn-nlEodoO9QUw5zVF6OdGDGLtUS4QjLW9TIZ6T-koLBsgwn9wblhh8Ox34Wv7hstp-UGgwqMvMrpD-8_bxeErsUw-3-s1WdPCBzIV_LeGppC-ApNEvmgbbKpMaKo_91DP2m0CP1XD53Snf_PzqUycP_UZv1w"/>
+<!-- Gradient Overlay for legibility -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<!-- Floating Glassmorphic Identity Card -->
+<div class="absolute bottom-8 left-6 right-6 lg:left-12 lg:right-12 glass-card p-8 rounded-lg animate-fade-in shadow-2xl">
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<span class="label-md font-semibold text-primary uppercase tracking-widest bg-primary-container/20 px-3 py-1 rounded-full">Sci-Fi / Drama</span>
+<h2 class="font-headline font-extrabold text-4xl lg:text-5xl mt-2 tracking-tight text-on-surface">Neon Echoes</h2>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-lowest/80 px-4 py-2 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-lg">8.9</span>
+</div>
+</div>
+<div class="flex gap-6 text-on-surface-variant font-medium">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">schedule</span>
+<span>2h 24m</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">calendar_today</span>
+<span>2024</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">closed_caption</span>
+<span>English</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Body -->
+<section class="px-6 lg:px-12 mt-12 space-y-12">
+<!-- Synopsis & Action -->
+<div class="grid lg:grid-cols-3 gap-12 items-start">
+<div class="lg:col-span-2 space-y-6">
+<h3 class="font-headline font-bold text-2xl text-on-surface">The Storyline</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed font-body">
+                        In a world where memories can be synthesized and traded like currency, a disillusioned "Echo Weaver" discovers a fragment of a forbidden childhood memory that doesn't belong to him. As he traverses the rain-slicked corridors of District 9, he must decide whether to sell the memory for a life of luxury or uncover the truth about a forgotten era of human emotion.
+                    </p>
+<div class="flex flex-wrap gap-3 pt-2">
+<span class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface font-medium">Cyberpunk</span>
+<span class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface font-medium">Noir</span>
+<span class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface font-medium">Existential</span>
+</div>
+</div>
+<!-- Neuromorphic CTA -->
+<div class="flex flex-col gap-6">
+<button class="neu-button group py-6 px-8 rounded-lg flex flex-col items-center justify-center gap-3 transition-all">
+<div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">edit_note</span>
+</div>
+<span class="font-headline font-bold text-lg text-primary">Write Diary</span>
+</button>
+<div class="surface-container-low p-6 rounded-lg space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-bold">Director</span>
+<span class="text-on-surface-variant">Lydia Vance</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-bold">Studio</span>
+<span class="text-on-surface-variant">Aether Pictures</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Screenshots Horizontal Scroll -->
+<div class="space-y-6 overflow-hidden">
+<div class="flex items-center justify-between">
+<h3 class="font-headline font-bold text-2xl text-on-surface">Visual Archive</h3>
+<span class="text-primary font-bold text-sm tracking-widest uppercase cursor-pointer hover:underline">View All</span>
+</div>
+<div class="flex gap-6 overflow-x-auto custom-scrollbar pb-4 snap-x">
+<div class="flex-none w-80 h-48 rounded-lg overflow-hidden snap-start shadow-md">
+<img class="w-full h-full object-cover" data-alt="cinematic shot of an old film reel and projector in a dusty dim lit room with light rays filtering through" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_g3zvIOJ6_5VAG0nJv-7qiHaJwbvaKxUsCQzJjVsNwWcRGQ7OnZTmnmN892Nh81dHJ6o7IZaZEbvC-W2YZRG3bk_83o3WZ6lvfKl4ozttgvBcJZ_SimBCRPx2MRNtPe4HkP1GRhyqMu5miT6hTjghaztGlsx8TAroFXRwCb2mW7rMzynZhf08RHJH_sYAyj0wOjPykfQDOtLSDxYb899jTRtR1gId-SZrP_1UskHOD-1Oi47R1-TqUTJHBS-942RfVdGK7cxOHrw"/>
+</div>
+<div class="flex-none w-80 h-48 rounded-lg overflow-hidden snap-start shadow-md">
+<img class="w-full h-full object-cover" data-alt="interior of a classic luxury movie theater with red velvet seats and warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU_0mIDEZ-C69cbSMVAs8BOVjKbCO2ht_PMHRnxUgu-zYmHABlJ-esccJxqHFP9I6p-qn7vz3DiqUmUfYxM_-5Vd41BZUNC5tfjB8PXA1ueJ950ehAB5arQ5OAhAtMQ-xML8DJCdY9GMs8Aa0luUaS7iZVIncYWk1O8ae0nDiQPt06M04Yn-bnnullznPhNnnj74-hPDXS08ogACxDgnycRh4i0DM_6ehW6D6Wli97EuURGjBYqOsq01Gk0kJneWTrzk982WiafhU"/>
+</div>
+<div class="flex-none w-80 h-48 rounded-lg overflow-hidden snap-start shadow-md">
+<img class="w-full h-full object-cover" data-alt="extreme close-up of a high-tech camera lens reflecting bright neon city lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZFwKA3QDeCqD1NejBm9zNxgI0ta_xLqyWJYH-o8oXHz_OJZx80tgmrELrcE0ojR4RN-lP3GOlf4hNVvo5nZP6XYbSWTbzyIftPCl9dxcRI_1v0ClBqwt4Rh2_IU8IyIdzMeVJ5Wr_49CJieNyy-dTqU-h1EmwrYNlVw8emBq0bNUwW1DW0itQ6QQoC1FuyQYBHFEqGfpr9vY4N646fHKi70rEZ6iH2gPzxp9fS0O--7ZzwoeEpKSCpzh0m7FXi_LyVDqc8u3N7UI"/>
+</div>
+<div class="flex-none w-80 h-48 rounded-lg overflow-hidden snap-start shadow-md">
+<img class="w-full h-full object-cover" data-alt="misty urban landscape at night with towering skyscrapers glowing with soft blue and pink holographic advertisements" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdQZby8euNf94i8kbjYCZn0k0SICI_QNsoohQ5BM_ekSN4uR9ohdjJlNpLVKSGbo49DTsdRMnpEjP5x1LOBOiz929PFhs33EkXkeXBcThQJpXl634DxUE19DGWw431e-VA0he1_PcWPTVqjE39su53rIBdkBPWL5y0RvEIhJZSq15AjwRgl8kCYsrbQZsyojcnpv5qaoU3K5t7I9NjliBuM6072Zqn5AiAgAzwPJ7tVz6SMnaq5-Pw2fXwQepsuvzvkeaLeh7eZ4o"/>
+</div>
+</div>
+</div>
+<!-- Cast Section -->
+<div class="space-y-6">
+<h3 class="font-headline font-bold text-2xl text-on-surface">The Ensemble</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0">
+<img alt="Cast" data-alt="portrait of a middle-aged man with sharp features and thoughtful expression wearing a dark turtleneck" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfiv6MhUs6MlqS3-ED0oTCkxJnbqVA1ZiWJjul3CNlmFoOwYglsaHd85RmodXSez2BF_L67yV_uyuS-eKzTm5AazbaH9f84qTeeU6pLN20u_TH2LvTYJsSfcziD2CDzjxiNW8hfVKrbH6dpzzoaqVTEpdgd5QtbncWM060K79eBj2pFaLNJIjPMjl-y4zuvHqS3NYRTElLyPilvMPyHZNU4Mxdl_rqcd6dIGLrQEFQdWqLvav7imGozSk41QKcMqbsXyhFJSgPWr4"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Marcus Thorne</p>
+<p class="text-xs text-on-surface-variant">as Kaelen</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0">
+<img alt="Cast" data-alt="portrait of a young woman with intense gaze and short hair lit by soft pink ambient light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJyYJTvJgq3HQWfw3ViQBFCOhII0Wp-myjf8JqyPKE1PAK91gR8veptQ2IbC5lrFE2vyQP8EVewi3tS6Ty0CSqsANfOtvjNvvke59WJvlBMH99y0HU54e8KkyYfiAAXSgwu389LoKBIPXJVzHWbQYmupUqgtwBqwU20Z7dPN0_aZ4jb3PkA50x39YOuFs5Zmw4b9cLfo5zoq4fWr55Hml_m55gNhBmbr7r0W7jPUBzKhNXYq4kWDTRlDhi-SHI_n_2ndiGmaYBd48"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Elena Voss</p>
+<p class="text-xs text-on-surface-variant">as Mira</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0">
+<img alt="Cast" data-alt="portrait of an older distinguished man with gray beard and wise eyes wearing a classic coat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLSpnF6B_IE2uRoaheN0HWJAjzIlEEJyI5SktBMxPagxuQlFdC45n3SwFjzfY6_tQ4T8Y-gx7qixDYvOaKoQz5P_jPv4Ka9XQuZ6wTj9om3gBpiVpme3YdEL7xIoI82snATK2yBDvMIlsq7BGDkwj8q8p853etww7M7Xgeho91TyVmm_mTMjyVaYqcBayfcJllhN3lx2oie4cIDAm2KIn6DMXY4WjJX44wHX_gP52hDx0vDR5wPTX56A6FuQxKJ69Ns3bAE374J0c"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Julian Graves</p>
+<p class="text-xs text-on-surface-variant">as The Weaver</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-lowest">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0">
+<img alt="Cast" data-alt="portrait of a woman with braided hair and a confident smile against a neutral backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB53bK5CLktzwTCSnaKRjiERmntgKaeecldC0mksa426xZ9lF4g57nm006W1d3oL56Qhw8T6NtlsN7pHt-BpLI8mkvg_BsfZnSKwVtmJ4oc-MmuAb-LZthqFDBeAeZhTNz5bRp2mPna8QZLB8KrNCkFZ_h2GZtwpVI8n6BMLhNY65wCPXejhjNnKSbK9CewfTNqnSRAjfJm07AZCfuh2-VyOC0FY1GqrqwCf_dt1VT74lwobGxUF-p6GAefZGJ0qi1H9ndKSgJimjg"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Sasha Bell</p>
+<p class="text-xs text-on-surface-variant">as Captain Rho</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl flex justify-around items-center px-4 pb-2 z-50 rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-2xl px-5 py-2 active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Diaries</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 dark:hover:text-indigo-300 active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wide">Profile</span>
+</a>
+</nav>
+</body></html>
