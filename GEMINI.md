@@ -1,3 +1,6 @@
+# Terminal
+- Windwos 11 환경이므로 터미널 커맨드 입력 시 주의해야함.
+
 # Movie Diary Project
 
 - 모든 대화는 한국어로 이루어져야 함.

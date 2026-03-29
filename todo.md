@@ -1,1121 +1,433 @@
-# Movie Diary App — Home Screen Improvement Tasks
+# Movie Diary — 프로젝트 분석 및 개선 TODO
 
-> **Project**: Movie Diary (Flutter + NestJS)
-> **Target**: Home Screen (`HomeContent`) 개선
-> **Created**: 2026-03-27
-> **Backend 변경**: 없음 (전체 프론트엔드 작업)
-
----
-
-## Project Structure
-
-```
-D:\Projects\movie_diary\
-├── movie_diary_app/          # Flutter frontend
-│   └── lib/
-│       ├── main.dart
-│       ├── constants.dart                    # 디자인 토큰 (kPrimary, kSurface, kHeadlineFont 등)
-│       ├── screens/
-│       │   ├── main_screen.dart              # 4탭 네비게이션 (홈/탐색/다이어리/프로필)
-│       │   ├── home_screen.dart              # 홈 화면 진입점, FutureBuilder로 HomeData fetch
-│       │   ├── movie_search_screen.dart
-│       │   ├── my_diary_list_screen.dart
-│       │   ├── my_page_screen.dart
-│       │   ├── movie_detail_screen.dart
-│       │   └── diary_write_screen.dart
-│       ├── component/
-│       │   ├── home_content.dart             # ★ 홈 화면 UI 전체 (1,060줄, 단일 파일)
-│       │   └── custom_app_bar.dart
-│       ├── data/
-│       │   ├── home_data.dart                # HomeData, User, RatedMovie 모델
-│       │   ├── diary_entry.dart              # DiaryEntry 모델
-│       │   └── movie.dart                    # Movie 모델
-│       └── services/
-│           └── api_service.dart              # API 호출 (fetchHomeData 등)
-└── movie-diary-backend/      # NestJS backend (이번 작업에서 수정 없음)
-```
+> **Project**: Movie Diary (Flutter + NestJS + MySQL)
+> **분석일**: 2026-03-28
+> **목적**: 프로젝트 전반의 부족한 부분 파악 및 보완 계획 수립
 
 ---
 
-## Data Flow
+## 0. UI 디자인 톤 통일 (Stitch Design 미적용 화면) — ✅ 완료
 
-```
-MainScreen (_onItemTapped으로 탭 전환)
-  └─ HomeScreen (StatefulWidget, GlobalKey로 외부에서 refresh 가능)
-      ├─ _fetchHomeData() → ApiService.fetchHomeData()
-      │   ├─ GET /auth/me        → User JSON
-      │   └─ GET /posts/my       → List<DiaryEntry> JSON
-      │   └─ 합쳐서 → HomeData 객체
-      └─ FutureBuilder → HomeContent(data: HomeData)
-          ├─ _buildGreeting()           인사말 헤더
-          ├─ _buildFeaturedCard()       최근 다이어리 히어로 카드
-          ├─ _buildStatsBento()         2×2 통계 그리드
-          ├─ _buildTopRatedMovies()     평점 8.0+ 가로 스크롤
-          ├─ _buildCalendarHeatmap()    이번 달 관람 히트맵
-          └─ _buildDiaryCard() × 5     최근 다이어리 리스트
-```
+### 디자인 시스템 요약 ("The Ethereal Archive")
+- **배경**: `kSurface` (#F7F9FC) 밝은 라이트 톤 — `Colors.black` / `Color(0xFF1E1E1E)` 다크 톤 사용 금지
+- **컬러**: `kPrimary` (#4A50C8 보라) — `Color(0xFFE50914)` 넷플릭스 레드 사용 금지
+- **텍스트**: `kOnSurface` (#2C3338) — `Colors.white` 사용 금지
+- **폰트**: `kHeadlineFont` (PlusJakartaSans) + `kBodyFont` (NotoSansKR)
+- **인풋**: Neuromorphic inset 스타일 (`kSurfaceHigh` 배경 + 이중 그림자)
+- **버튼**: `kPrimaryGradient` + `rounded-md` (1.5rem)
+- **카드**: `kSurfaceLowest` 배경, 구분선 금지 → 배경색 차이로 분리
+- **모서리**: 최소 `rounded-md` (12~16px), 부드러운 느낌 유지
 
----
+### 현재 상태 비교
 
-## HomeData Model (lib/data/home_data.dart)
-
-```dart
-class HomeData {
-  final User user;
-  final int todayCount;
-  final int totalCount;
-  final List<DiaryEntry> recentEntries;
-
-  // Computed getters (매 접근마다 재계산됨 — Task 3에서 수정 대상):
-  int get monthlyCount { ... }           // 이번 달 작성 수
-  double get averageRating { ... }       // 전체 평균 평점
-  String get topGenre { ... }            // 최다 장르
-  List<RatedMovie> get topRatedMovies { ... }  // 평점 8.0+ 영화 리스트
-  Map<int, int> get monthlyHeatmap { ... }     // 날짜별 관람 수 맵
-}
-```
+| 화면 | 파일 | 디자인 적용 | 문제점 |
+|------|------|------------|--------|
+| 홈 | `home_screen.dart`, `home_content.dart` | ✅ 적용됨 | - |
+| 로그인 | `login_screen.dart` | ✅ 적용됨 | - |
+| 회원가입 | `register_screen.dart` | ✅ 적용됨 | - |
+| 비밀번호 찾기 | `forgot_password_screen.dart` | ✅ 적용됨 | - |
+| 다이어리 작성 | `diary_write_screen.dart` | ✅ 적용됨 | - |
+| 마이페이지 | `my_page_screen.dart` | ✅ 적용됨 | - |
+| 프로필 편집 | `profile_edit_screen.dart` | ✅ 적용됨 | - |
+| **내 다이어리 목록** | `my_diary_list_screen.dart` | ✅ **적용됨** | - |
+| **개인 다이어리 목록** | `personal_diary_screen.dart` | ✅ **적용됨** | - |
+| **개인 다이어리 작성** | `personal_diary_write_screen.dart` | ✅ **적용됨** | - |
+| **계정 설정** | `account_settings_screen.dart` | ✅ **적용됨** | - |
 
 ---
 
-## Design System (lib/constants.dart)
+### 0-1. 내 다이어리 목록 (`my_diary_list_screen.dart`) — ✅ 적용됨
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `kSurface` | `#F7F9FC` | 배경색 |
-| `kSurfaceLow` | `#F0F4F8` | 콘텐츠 영역 |
-| `kSurfaceLowest` | `#FFFFFF` | 인터랙티브 카드 |
-| `kSurfaceHigh` | `#E3E9EE` | 엘리베이티드 오버레이 |
-| `kSurfaceDim` | `#D4DBE1` | 그림자용 |
-| `kPrimary` | `#4A50C8` | 주 액센트 (블루/퍼플) |
-| `kPrimaryEnd` | `#787FF9` | 그래디언트 끝점 |
-| `kPrimaryGradient` | LinearGradient | 배지/버튼 그래디언트 |
-| `kOnSurface` | `#2C3338` | 본문 텍스트 |
-| `kOnSurfaceVariant` | `#596065` | 보조 텍스트 |
-| `kHeadlineFont` | `PlusJakartaSans` | 제목/숫자 |
-| `kBodyFont` | `NotoSansKR` | 본문/한국어 |
+**현재 문제점:**
+- (해결됨) `backgroundColor: Colors.black` → 다크 배경
+- (해결됨) 검색 영역 `color: Colors.black`, 입력필드 `fillColor: Color(0xFF1E1E1E)` → 다크 톤
+- (해결됨) 텍스트 전체 `Colors.white`, `Colors.grey[600]` → 다크 테마 색상
+- (해결됨) FilterChip: `backgroundColor: Color(0xFF1E1E1E)`, `selectedColor: Color(0xFFE50914)` → 레드 액센트
+- (해결됨) Card: `color: Color(0xFF1E1E1E)` → 다크 카드
+- (해결됨) DateRangePicker 테마: `ColorScheme.dark` + `Color(0xFFE50914)` → 다크/레드 테마
+- (해결됨) 로딩/에러/빈 상태: `Colors.white` 텍스트 → 다크 전용
 
-디자인 스타일: Neumorphic shadows + Glassmorphism (BackdropFilter blur) + Gradient badges
-
----
-
-## Tasks
-
-### Task 1 — `onDiaryTabTap` 콜백 미전달 버그 수정 [Bug Fix]
-
-**문제**: "내가 사랑한 영화"와 "최근 기록" 섹션의 "전체보기" 버튼이 동작하지 않음.
-`HomeContent`는 `onDiaryTabTap` 파라미터를 받지만, `HomeScreen`과 `MainScreen`에서 이 콜백을 전달하는 경로가 없음.
-
-**수정 파일 3개**:
-
-#### 1-1. `lib/screens/home_screen.dart`
-
-`HomeScreen` 위젯에 `onDiaryTabTap` 파라미터 추가:
-
-```dart
-// 현재:
-class HomeScreen extends StatefulWidget {
-  final VoidCallback? onSearchTap;
-  const HomeScreen({super.key, this.onSearchTap});
-
-// 변경:
-class HomeScreen extends StatefulWidget {
-  final VoidCallback? onSearchTap;
-  final VoidCallback? onDiaryTabTap;    // ← 추가
-  const HomeScreen({super.key, this.onSearchTap, this.onDiaryTabTap});  // ← 추가
-```
-
-`HomeContent`에 전달:
-
-```dart
-// 현재 (build 메서드 내 FutureBuilder):
-return HomeContent(
-  data: data,
-  onRefresh: refresh,
-  onSearchTap: widget.onSearchTap,
-);
-
-// 변경:
-return HomeContent(
-  data: data,
-  onRefresh: refresh,
-  onSearchTap: widget.onSearchTap,
-  onDiaryTabTap: widget.onDiaryTabTap,    // ← 추가
-);
-```
-
-#### 1-2. `lib/screens/main_screen.dart`
-
-`HomeScreen` 생성 시 콜백 전달:
-
-```dart
-// 현재:
-HomeScreen(
-  key: _homeKey,
-  onSearchTap: () => _onItemTapped(1),
-),
-
-// 변경:
-HomeScreen(
-  key: _homeKey,
-  onSearchTap: () => _onItemTapped(1),
-  onDiaryTabTap: () => _onItemTapped(2),    // ← 추가 (다이어리 탭 = index 2)
-),
-```
-
-**검증**: 앱 실행 후 홈 화면의 "내가 사랑한 영화 > 전체보기", "최근 기록 > 전체보기" 탭 시 다이어리 탭으로 전환되는지 확인.
+**수정 내역 (stitch 디자인 `My_Diary_List.png` 반영):**
+- [x] `Scaffold backgroundColor` → `kSurface`
+- [x] 검색 영역 → `kSurface` 배경, 입력필드 neuromorphic 스타일 (`kSurfaceHigh` + 이중 그림자)
+- [x] 검색 입력 텍스트 → `kOnSurface`, 힌트 → `kOnSurfaceVariant` (0.5 alpha)
+- [x] 검색 아이콘 → `kOnSurfaceVariant`
+- [x] FilterChip → `kSurfaceHigh` 배경, 선택 시 `kSecondaryContainer` + `kOnSecondaryContainer` 텍스트
+- [x] 날짜 범위 선택기 → neuromorphic 컨테이너, `kPrimary` 아이콘, `kOnSurface` 텍스트
+- [x] DateRangePicker 테마 → 라이트 `ColorScheme` + `kPrimary` 액센트
+- [x] 카드 디자인 → stitch 스타일로 전면 재설계:
+  - `kSurfaceLowest` 배경 + 부드러운 ambient shadow
+  - 포스터 이미지 `borderRadius: 16` (rounded-lg)
+  - 제목: `kHeadlineFont`, `kOnSurface`
+  - 부제(영화명): `kBodyFont`, `kOnSurfaceVariant`
+  - 평점: `kPrimary` 뱃지 (원형, 그래디언트 배경)
+  - 날짜 메타: `kOnSurfaceVariant`, `label-md` 사이즈
+  - 카드 간 구분: `spacing-4` 여백 (divider 없이)
+- [x] 로딩 인디케이터 → `kPrimary` 색상
+- [x] 에러/빈 상태 텍스트 → `kOnSurfaceVariant`, 아이콘 → `kSurfaceDim`
+- [x] stitch 디자인의 "My Movie Archive" 헤더 스타일 반영 (Plus Jakarta Sans, headline-md)
+- [x] FAB 또는 추가 버튼 → `kPrimaryGradient` 스타일 (기능상 필요시)
 
 ---
 
-### Task 2 — 이미지 캐싱 적용 [Performance]
+### 0-2. 개인 다이어리 목록 (`personal_diary_screen.dart`) — ✅ 적용됨
 
-**문제**: 모든 이미지가 `Image.network`로 로드되어 스크롤 시 재요청 발생, 깜빡임 있음.
+**현재 문제점:**
+- (해결됨) `backgroundColor: Colors.black` → 다크 배경
+- (해결됨) AppBar: `backgroundColor: Colors.black`, `foregroundColor: Colors.white` → 다크 테마
+- (해결됨) 로딩: `CircularProgressIndicator(color: Color(0xFFE50914))` → 레드
+- (해결됨) 빈 상태: `Colors.grey[800]` 아이콘, `Colors.grey[600]` 텍스트 → 다크 전용
+- (해결됨) Card: `color: Color(0xFF1E1E1E)` → 다크 카드
+- (해결됨) 날짜 텍스트: `Colors.white70` → 다크 전용
+- (해결됨) 내용 텍스트: `Colors.white` → 다크 전용
+- (해결됨) FAB: `backgroundColor: Color(0xFFE50914)` → 넷플릭스 레드
 
-**패키지 추가**:
+**수정 내역:**
+- [x] `Scaffold backgroundColor` → `kSurface`
+- [x] AppBar → 투명 배경, `kOnSurface` 텍스트, `kHeadlineFont`
+- [x] 로딩 인디케이터 → `kPrimary`
+- [x] 빈 상태 → `kSurfaceDim` 아이콘, `kOnSurfaceVariant` 텍스트
+- [x] 카드 → `kSurfaceLowest` 배경 + neuromorphic ambient shadow:
+  - 날짜: `kHeadlineFont`, `kOnSurfaceVariant`, 14px, w600
+  - 내용: `kBodyFont`, `kOnSurface`, 15px, height 1.5
+  - `borderRadius: 20` (rounded-xl)
+  - 카드 간 구분: `spacing-4` 여백 (divider 없이)
+- [x] FAB → `kPrimaryGradient` 배경 + ambient shadow (`kPrimary` 0.25 alpha)
+- [ ] 캘린더 형태 뷰 도입 검토 (홈 화면의 히트맵 캘린더 연계)
 
-```yaml
-# pubspec.yaml에 추가:
-dependencies:
-  cached_network_image: ^3.4.1
-```
+---
 
-**수정 파일**: `lib/component/home_content.dart`
+### 0-3. 개인 다이어리 작성 (`personal_diary_write_screen.dart`) — ✅ 적용됨
 
-상단 import 추가:
-```dart
-import 'package:cached_network_image/cached_network_image.dart';
-```
+**현재 문제점:**
+- (해결됨) `backgroundColor: Colors.black` → 다크 배경
+- (해결됨) AppBar: `backgroundColor: Colors.black`, `foregroundColor: Colors.white` → 다크 테마
+- (해결됨) 날짜 표시: `TextStyle(fontWeight: FontWeight.bold)` → 기본 폰트, 디자인 시스템 미사용
+- (해결됨) 삭제 다이얼로그: `backgroundColor: Color(0xFF2C2C2C)`, `Colors.white` 텍스트 → 다크 전용
+- (해결됨) 삭제 확인 버튼: `Color(0xFFE50914)` → 넷플릭스 레드
+- (해결됨) DatePicker 테마: `ColorScheme.dark` + `Color(0xFFE50914)` → 다크/레드
+- (해결됨) 텍스트 입력: `Colors.white`, `fillColor: Color(0xFF1E1E1E)` → 다크 전용
+- (해결됨) 힌트: `Colors.grey[400]` → 다크 전용
+- (해결됨) 저장 버튼: `backgroundColor: Color(0xFFE50914)`, `borderRadius: 8` → 레드/날카로운 모서리
 
-아래 4곳의 `Image.network`를 `CachedNetworkImage`로 교체:
+**수정 내역:**
+- [x] `Scaffold backgroundColor` → `kSurface`
+- [x] AppBar → 투명 배경, `kOnSurface` foreground:
+  - 날짜 텍스트: `kHeadlineFont`, `kOnSurface`, fontWeight w700
+  - 드롭다운 아이콘 → `kOnSurfaceVariant`
+  - 삭제 아이콘 → `kError` 색상
+- [x] DatePicker 테마 → 라이트 `ColorScheme` + `kPrimary` 액센트
+- [x] 삭제 다이얼로그 → stitch 스타일:
+  - `backgroundColor: kSurfaceLowest`
+  - `shape: RoundedRectangleBorder(borderRadius: 24)`
+  - 제목: `kHeadlineFont`, `kOnSurface`
+  - 내용: `kBodyFont`, `kOnSurfaceVariant`
+  - 취소: `kOnSurfaceVariant`, 삭제: `kError`
+- [x] 텍스트 입력 → neuromorphic 스타일:
+  - `kSurfaceHigh` 배경 + 이중 그림자 (dark/light)
+  - `borderRadius: 16`
+  - 텍스트: `kBodyFont`, `kOnSurface`, 16px
+  - 힌트: `kOnSurfaceVariant` (0.5 alpha)
+  - 포커스 border: `kPrimary` (0.3 alpha)
+- [x] 로딩 인디케이터 → `kPrimary`
+- [x] 저장 버튼 → `kPrimaryGradient` + `borderRadius: 20` + ambient shadow:
+  - 텍스트: `kHeadlineFont`, Colors.white, fontWeight w700
+  - shadow: `kPrimary` 0.25 alpha
 
-#### 2-1. Featured Card 배경 이미지 (_buildFeaturedCard 내부, 현재 line 178~186)
+---
 
-```dart
-// 현재:
-if (bgUrl != null)
-  Image.network(
-    bgUrl,
-    fit: BoxFit.cover,
-    filterQuality: FilterQuality.high,
-    errorBuilder: (_, __, ___) => Container(color: kSurfaceHigh),
+### 0-4. 계정 설정 (`account_settings_screen.dart`) — ✅ 적용됨
+
+**현재 문제점:**
+- (해결됨) `backgroundColor: Colors.black` → 다크 배경
+- (해결됨) AppBar: `backgroundColor: Colors.black`, `Colors.white` 텍스트 → 다크 테마
+- (해결됨) 섹션 제목: `Colors.white`, 기본 폰트 → 디자인 시스템 미사용
+- (해결됨) 비밀번호 입력: `fillColor: Color(0xFF333333)`, `Colors.white` 텍스트 → 다크 전용
+- (해결됨) 라벨: `Colors.grey` → 다크 전용
+- (해결됨) 변경 버튼: `backgroundColor: Color(0xFFE50914)`, `borderRadius: 8` → 레드/날카로운 모서리
+- (해결됨) 구분선: `Divider(color: Colors.grey)` → **디자인 시스템 "No-Divider Rule" 위반**
+- (해결됨) 로그아웃/탈퇴 다이얼로그: `backgroundColor: Color(0xFF2C2C2C)`, `Colors.white` → 다크 전용
+- (해결됨) 탈퇴 버튼: `Color(0xFFE50914)` → 넷플릭스 레드
+- (해결됨) 메뉴 텍스트: `Colors.white`, `Colors.grey[600]` → 다크 전용
+
+**수정 내역:**
+- [x] `Scaffold backgroundColor` → `kSurface`
+- [x] AppBar → 투명 배경:
+  - 뒤로가기: `Icons.arrow_back_ios_new_rounded`, `kOnSurface`
+  - 제목: `kHeadlineFont`, 18px, w700, `kOnSurface`, centerTitle
+- [x] 비밀번호 변경 섹션:
+  - 섹션 제목: `kHeadlineFont`, 18px, w700, `kOnSurface`
+  - 라벨: `kBodyFont`, 13px, w600, `kOnSurfaceVariant`
+  - 입력필드 → neuromorphic 스타일 (`kSurfaceHigh` + 이중 그림자 + `borderRadius: 14`)
+  - 텍스트: `kBodyFont`, `kOnSurface`, 14px
+  - 포커스 border: `kPrimary` (0.3 alpha)
+- [x] 비밀번호 변경 버튼 → `kPrimaryGradient` + `borderRadius: 20` + ambient shadow
+- [x] `Divider` 제거 → 배경색 차이로 섹션 분리 (`kSurfaceLow` 영역 구분 또는 `spacing-12` 여백)
+- [x] 계정 관리 섹션 → `my_page_screen.dart`의 메뉴 스타일과 통일:
+  - 아이콘 원형 배경 + `kPrimary` 또는 `kError` 틴트
+  - `kHeadlineFont`, 16px, w600
+  - chevron 아이콘: `kOnSurfaceVariant`
+  - 로그아웃: `kError` 색상 톤
+- [x] 모든 다이얼로그 → stitch 스타일:
+  - `backgroundColor: kSurfaceLowest`
+  - `borderRadius: 24`
+  - 제목: `kHeadlineFont`, `kOnSurface`
+  - 내용: `kBodyFont`, `kOnSurfaceVariant`
+  - 확인/취소 버튼 텍스트: `kHeadlineFont`, w600~w700
+- [x] 로딩 인디케이터 → `kPrimary`
+
+---
+
+### 0-5. 내 다이어리 목록 → DateRangePicker 테마 (공통) — ✅ 완료
+
+**현재 문제:**
+- (해결됨) `my_diary_list_screen.dart`의 `showDateRangePicker` 내부에서 `ColorScheme.dark` + `Color(0xFFE50914)` 사용
+- 전체 앱 라이트 톤과 불일치
+
+**수정 내역:**
+- [x] 라이트 `ColorScheme` 사용:
+  ```dart
+  ColorScheme.light(
+    primary: kPrimary,
+    onPrimary: Colors.white,
+    surface: kSurface,
+    onSurface: kOnSurface,
   )
-else
-  Container(color: kSurfaceHigh),
-
-// 변경:
-if (bgUrl != null)
-  CachedNetworkImage(
-    imageUrl: bgUrl,
-    fit: BoxFit.cover,
-    filterQuality: FilterQuality.high,
-    placeholder: (_, __) => Container(color: kSurfaceHigh),
-    errorWidget: (_, __, ___) => Container(color: kSurfaceHigh),
-  )
-else
-  Container(color: kSurfaceHigh),
-```
-
-#### 2-2. 가로 스크롤 포스터 (_buildTopRatedMovies 내부, 현재 line 556~563)
-
-```dart
-// 현재:
-rm.movie.posterUrl != null
-    ? Image.network(
-        rm.movie.posterUrl!,
-        fit: BoxFit.cover,
-        filterQuality: FilterQuality.high,
-        errorBuilder: (_, __, ___) => Container(color: kSurfaceHigh),
-      )
-    : Container(color: kSurfaceHigh),
-
-// 변경:
-rm.movie.posterUrl != null
-    ? CachedNetworkImage(
-        imageUrl: rm.movie.posterUrl!,
-        fit: BoxFit.cover,
-        filterQuality: FilterQuality.high,
-        placeholder: (_, __) => Container(color: kSurfaceHigh),
-        errorWidget: (_, __, ___) => Container(color: kSurfaceHigh),
-      )
-    : Container(color: kSurfaceHigh),
-```
-
-#### 2-3. 다이어리 카드 포스터 (_buildDiaryCard 내부, 현재 line 858~864)
-
-```dart
-// 현재:
-child: entry.movie.posterUrl != null
-    ? Image.network(
-        entry.movie.posterUrl!,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _posterPlaceholder(),
-      )
-    : _posterPlaceholder(),
-
-// 변경:
-child: entry.movie.posterUrl != null
-    ? CachedNetworkImage(
-        imageUrl: entry.movie.posterUrl!,
-        fit: BoxFit.cover,
-        placeholder: (_, __) => _posterPlaceholder(),
-        errorWidget: (_, __, ___) => _posterPlaceholder(),
-      )
-    : _posterPlaceholder(),
-```
-
-**검증**: 홈 화면 스크롤 후 다시 위로 돌아갔을 때 이미지가 즉시 표시되는지 확인. 네트워크 탭에서 중복 요청이 없는지 확인.
+  ```
+- [x] 텍스트 테마: `kBodyFont` 기반
+- [x] 다이얼로그 배경: `kSurfaceLowest`
+- [x] 버튼 색상: `kPrimary`
 
 ---
 
-### Task 3 — Computed Getter를 `late final`로 변경 [Performance]
+## 1. 보안 (Security) — ✅ 완료
 
-**문제**: `HomeData`의 getter 5개가 접근할 때마다 O(n) 재계산됨. 빌드 중 여러 번 참조되어 불필요한 중복 연산 발생.
+### 1-1. JWT 토큰 만료 미설정 — ✅ 완료
+- **현재**: JWT 토큰에 만료 시간(`expiresIn`)이 설정되어 있지 않아 토큰 탈취 시 영구적으로 유효
+- **위치**: `movie-diary-backend/src/auth/auth.service.ts`
+- **보완**:
+  - [x] Access Token 만료 시간 설정 (1시간)
+  - [x] Refresh Token 도입 및 갱신 로직 구현 (7일)
+  - [x] 프론트엔드에서 토큰 만료 시 자동 갱신 처리 (`api_service.dart` 인터셉터)
 
-**수정 파일**: `lib/data/home_data.dart`
+### 1-2. CORS 설정 과도하게 개방 — ✅ 완료
+- **현재**: `origin: '*'`로 모든 도메인에서 접근 허용
+- **위치**: `movie-diary-backend/src/main.ts`
+- **보완**:
+  - [x] 허용 도메인을 환경변수로 관리 (`ALLOWED_ORIGINS`)
+  - [x] 프로덕션 환경에서는 특정 도메인만 허용 (Split logic via environment)
 
-모든 `get` 키워드 프로퍼티를 `late final` 필드로 변환:
+### 1-3. Rate Limiting 미적용 — ✅ 완료
+- **현재**: 로그인, 회원가입 등 인증 API에 요청 제한 없음 → 브루트포스 공격 노출
+- **보완**:
+  - [x] `@nestjs/throttler` 패키지 도입
+  - [x] 로그인 API: 분당 5회 제한 (Auth API 전체)
+  - [x] 일반 API: 분당 60회 제한 (Default 전역 설정)
 
-```dart
-// ===== 현재 코드 =====
-int get monthlyCount {
-  final now = DateTime.now();
-  return recentEntries.where((e) {
-    return e.createdAt.year == now.year && e.createdAt.month == now.month;
-  }).length;
-}
+### 1-4. 비밀번호 재설정 방식 취약성 보강 — ✅ 완료
+- **현재**: 보안 질문/답변 방식 — 답변이 평문 비교될 가능성, 사회공학 공격에 취약
+- **위치**: `movie-diary-backend/src/auth/auth.service.ts` (resetPassword 메서드)
+- **보완**:
+  - [x] 보안 답변도 bcrypt 해싱 적용 (UsersService create/update 시점)
+  - [ ] 이메일 기반 비밀번호 재설정 도입 검토 (미래 과제)
 
-double get averageRating {
-  if (recentEntries.isEmpty) return 0;
-  return recentEntries.fold<double>(0, (s, e) => s + e.rating) /
-      recentEntries.length;
-}
-
-String get topGenre {
-  if (recentEntries.isEmpty) return '-';
-  final counts = <String, int>{};
-  for (final e in recentEntries) {
-    for (final g in e.movie.genres) {
-      if (g.isNotEmpty) counts[g] = (counts[g] ?? 0) + 1;
-    }
-  }
-  if (counts.isEmpty) return '-';
-  final sorted = counts.entries.toList()
-    ..sort((a, b) => b.value.compareTo(a.value));
-  return sorted.first.key;
-}
-
-List<RatedMovie> get topRatedMovies {
-  final best = <String, RatedMovie>{};
-  for (final e in recentEntries) {
-    if (e.rating >= 8.0) {
-      final existing = best[e.movie.docId];
-      if (existing == null || e.rating > existing.rating) {
-        best[e.movie.docId] = RatedMovie(movie: e.movie, rating: e.rating);
-      }
-    }
-  }
-  final list = best.values.toList()
-    ..sort((a, b) => b.rating.compareTo(a.rating));
-  return list;
-}
-
-Map<int, int> get monthlyHeatmap {
-  final now = DateTime.now();
-  final map = <int, int>{};
-  for (final e in recentEntries) {
-    final date = DateTime.tryParse(e.watchedDate);
-    if (date != null && date.year == now.year && date.month == now.month) {
-      map[date.day] = (map[date.day] ?? 0) + 1;
-    }
-  }
-  return map;
-}
-
-// ===== 변경 후 =====
-late final int monthlyCount = () {
-  final now = DateTime.now();
-  return recentEntries.where((e) {
-    return e.createdAt.year == now.year && e.createdAt.month == now.month;
-  }).length;
-}();
-
-late final double averageRating = () {
-  if (recentEntries.isEmpty) return 0.0;
-  return recentEntries.fold<double>(0, (s, e) => s + e.rating) /
-      recentEntries.length;
-}();
-
-late final String topGenre = () {
-  if (recentEntries.isEmpty) return '-';
-  final counts = <String, int>{};
-  for (final e in recentEntries) {
-    for (final g in e.movie.genres) {
-      if (g.isNotEmpty) counts[g] = (counts[g] ?? 0) + 1;
-    }
-  }
-  if (counts.isEmpty) return '-';
-  final sorted = counts.entries.toList()
-    ..sort((a, b) => b.value.compareTo(a.value));
-  return sorted.first.key;
-}();
-
-late final List<RatedMovie> topRatedMovies = () {
-  final best = <String, RatedMovie>{};
-  for (final e in recentEntries) {
-    if (e.rating >= 8.0) {
-      final existing = best[e.movie.docId];
-      if (existing == null || e.rating > existing.rating) {
-        best[e.movie.docId] = RatedMovie(movie: e.movie, rating: e.rating);
-      }
-    }
-  }
-  final list = best.values.toList()
-    ..sort((a, b) => b.rating.compareTo(a.rating));
-  return list;
-}();
-
-late final Map<int, int> monthlyHeatmap = () {
-  final now = DateTime.now();
-  final map = <int, int>{};
-  for (final e in recentEntries) {
-    final date = DateTime.tryParse(e.watchedDate);
-    if (date != null && date.year == now.year && date.month == now.month) {
-      map[date.day] = (map[date.day] ?? 0) + 1;
-    }
-  }
-  return map;
-}();
-```
-
-**검증**: 기존과 동일하게 동작하는지 확인. 통계 값이 정확히 같은지 비교.
+### 1-5. .env 파일 보안 — ✅ 완료
+- **현재**: 서브모듈 내 `.env` 파일에 DB 비밀번호, JWT Secret, API Key 포함
+- **보완**:
+  - [x] `.env` 파일이 `.gitignore`에 포함되어 있는지 확인
+  - [x] `.env.example` 파일 생성 (백엔드/프론트엔드 각각 생성 완료)
+  - [x] 프로덕션 환경 가이드라인 수립 (ConfigService 활용)
 
 ---
 
-### Task 4 — Shimmer/Skeleton 로딩 UI [UX]
+## 2. 데이터베이스 — ✅ 완료
 
-**문제**: 데이터 로딩 중 빈 화면 + `CircularProgressIndicator`만 표시됨.
+### 2-1. TypeORM synchronize: true 사용 중 — ✅ 완료
+- **현재**: 엔티티 변경 시 자동으로 스키마 변경 → 프로덕션에서 데이터 손실 위험
+- **위치**: `movie-diary-backend/src/app.module.ts` (TypeOrmModule 설정)
+- **보완**:
+  - [x] `synchronize: false`로 변경 (완료)
+  - [x] TypeORM 마이그레이션 시스템 도입 (완료: data-source.ts 및 package.json 스크립트 추가)
+  - [x] 마이그레이션 생성/실행 스크립트 추가 (`package.json`) (완료)
 
-**패키지 추가**:
-
-```yaml
-# pubspec.yaml에 추가:
-dependencies:
-  shimmer: ^3.0.0
-```
-
-**수정 파일**: `lib/screens/home_screen.dart`
-
-`FutureBuilder`의 `ConnectionState.waiting` 분기를 skeleton UI로 교체:
-
-```dart
-// 현재:
-if (snapshot.connectionState == ConnectionState.waiting) {
-  return const Center(child: CircularProgressIndicator());
-}
-
-// 변경: skeleton 위젯으로 교체
-if (snapshot.connectionState == ConnectionState.waiting) {
-  return _buildSkeletonLoading();
-}
-```
-
-`HomeScreen` 또는 별도 파일에 `_buildSkeletonLoading()` 메서드 추가. 홈 화면의 실제 레이아웃과 동일한 모양의 회색 placeholder를 Shimmer로 감싸서 구현:
-
-```dart
-Widget _buildSkeletonLoading() {
-  return Shimmer.fromColors(
-    baseColor: kSurfaceLow,
-    highlightColor: kSurfaceLowest,
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 120),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 인사말 skeleton
-          Container(width: 140, height: 14, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-          const SizedBox(height: 8),
-          Container(width: 200, height: 28, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-          const SizedBox(height: 20),
-
-          // Featured Card skeleton
-          Container(height: 220, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20))),
-          const SizedBox(height: 28),
-
-          // 벤토 그리드 skeleton (2×2)
-          Row(children: [
-            Expanded(child: Container(height: 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)))),
-            const SizedBox(width: 12),
-            Expanded(child: Container(height: 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)))),
-          ]),
-          const SizedBox(height: 12),
-          Row(children: [
-            Expanded(child: Container(height: 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)))),
-            const SizedBox(width: 12),
-            Expanded(child: Container(height: 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)))),
-          ]),
-          const SizedBox(height: 32),
-
-          // 가로 스크롤 skeleton
-          Container(width: 120, height: 18, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-          const SizedBox(height: 14),
-          SizedBox(
-            height: 200,
-            child: Row(children: List.generate(3, (i) => Padding(
-              padding: const EdgeInsets.only(right: 14),
-              child: Container(width: 120, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14))),
-            ))),
-          ),
-          const SizedBox(height: 32),
-
-          // 캘린더 skeleton
-          Container(height: 200, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20))),
-          const SizedBox(height: 32),
-
-          // 다이어리 카드 skeleton × 3
-          ...List.generate(3, (_) => Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: Container(height: 100, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18))),
-          )),
-        ],
-      ),
-    ),
-  );
-}
-```
-
-**검증**: 앱 실행 시 데이터 로딩 중 shimmer 애니메이션이 홈 화면 레이아웃 형태로 표시되는지 확인.
+### 2-2. 인덱스 최적화 부재 — ✅ 완료
+- **현재**: 자주 조회되는 컬럼에 인덱스 없음
+- **보완**:
+  - [x] `posts.user_id` — 사용자별 게시물 조회 (완료: @Index 추가)
+  - [x] `posts.movie_id` — 영화별 리뷰 조회 (완료: @Index 추가)
+  - [x] `personal_diary.user_id` + `personal_diary.date` — 날짜별 일기 조회 (완료: @Index 및 @Unique 추가)
+  - [x] `movies.docId` — KMDB 기반 영화 조회 (이미 unique이지만 확인 완료)
 
 ---
 
-### Task 5 — 에러 상태 개선 (리트라이 버튼) [UX]
+## 3. 누락된 핵심 기능 — ✅ 완료
 
-**문제**: 에러 시 텍스트만 표시되고 재시도 방법이 없음.
+### 3-1. 댓글 (Comments) 모듈 미구현 — ✅ 완료
+- **현재**: `GEMINI.md` 문서에 Comments 모듈이 언급되어 있으나 백엔드에 실제 구현 없음
+- **보완**:
+  - [x] `Comment` 엔티티 생성 (content, user_id, post_id, created_at, updated_at)
+  - [x] `CommentsModule` (Controller, Service, DTOs) 구현 (CRUD 및 권한 확인)
+  - [x] 프론트엔드 댓글 UI 구현 (PostDetailScreen에서 목록 및 작성 가능)
 
-**수정 파일**: `lib/screens/home_screen.dart`
+### 3-2. 좋아요 (Likes) 기능 미구현 — ✅ 완료
+- **현재**: `posts.likes_count` 필드는 존재하지만, 실제 좋아요/취소 API 및 로직 없음
+- **보완**:
+  - [x] `Like` 엔티티 생성 (user_id, post_id, unique composite key)
+  - [x] 좋아요 토글 API 구현 (`POST /likes/toggle/:postId`)
+  - [x] `likes_count` 동기화 로직 (트랜잭션 세이프 업데이트)
+  - [x] 프론트엔드 좋아요 버튼 및 실시간 카운트 표시 (PostDetailScreen)
 
-```dart
-// 현재:
-} else if (snapshot.hasError) {
-  return const Center(child: Text('데이터를 불러오지 못했습니다.'));
-}
+### 3-3. 페이지네이션 미구현 — ✅ 완료
+- **현재**: 게시물 목록 API가 전체 데이터를 한번에 반환 → 데이터 증가 시 성능 저하
+- **위치**: `movie-diary-backend/src/posts/posts.service.ts`
+- **보완**:
+  - [x] 백엔드: offset 기반 페이지네이션 추가 (`findAll` API에 page, limit 적용)
+  - [x] 프론트엔드: 무한 스크롤 구현 (CommunityFeedScreen에서 ScrollController 활용)
 
-// 변경:
-} else if (snapshot.hasError) {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.all(40),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: const BoxDecoration(
-              color: kSurfaceHigh,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.wifi_off_rounded,
-              size: 30,
-              color: kOnSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            '데이터를 불러오지 못했습니다.',
-            style: TextStyle(
-              fontFamily: kBodyFont,
-              fontSize: 14,
-              color: kOnSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '네트워크 연결을 확인해주세요.',
-            style: TextStyle(
-              fontFamily: kBodyFont,
-              fontSize: 12,
-              color: kOnSurfaceVariant.withValues(alpha: 0.6),
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: refresh,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              decoration: BoxDecoration(
-                gradient: kPrimaryGradient,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: kPrimary.withValues(alpha: 0.25),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Text(
-                '다시 시도',
-                style: TextStyle(
-                  fontFamily: kHeadlineFont,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-```
-
-**검증**: 네트워크 끊긴 상태에서 앱 실행 → 에러 UI 표시 → "다시 시도" 탭 → 데이터 재로딩 확인.
+### 3-4. 게시물 검색/필터링 — ✅ 완료
+- **현재**: 게시물 내 검색, 장르별/날짜별 필터링 기능 없음
+- **보완**:
+  - [x] 백엔드: `GET /posts` 쿼리 파라미터 확장 (keyword, genre, date_from, date_to)
+  - [x] 프론트엔드: 검색 바 및 장르 칩 필터 UI 추가 (CommunityFeedScreen)
 
 ---
 
-### Task 6 — 시간대별 인사말 분기 [UX]
+## 4. 테스트 (Testing) — 🟡 중요
 
-**문제**: 항상 "안녕하세요"로 고정.
+### 4-1. 백엔드 테스트 보완 — ✅ 완료
+- **현재**: 실질적 비즈니스 로직 테스트 부재 (해결됨)
+- **보완 내역**:
+  - [x] Jest 테스트 환경 개선: 모든 `src/` 절대 경로 import를 상대 경로로 수정
+  - [x] Auth 서비스 테스트: 회원가입, 로그인, 토큰 갱신, 비밀번호 초기화/변경 로직 검증 (`auth.service.spec.ts`)
+  - [x] Posts 서비스 테스트: CRUD, 권한 검증(작성자 확인), 소프트 삭제 로직 검증 (`posts.service.spec.ts`)
+  - [x] Movies 서비스 테스트: KMDB API 연동 및 데이터 변환, findOrCreate 로직 검증 (`movies.service.spec.ts`)
+  - [x] Comments 서비스 테스트: 댓글 CRUD 및 권한 검증 테스트 추가 (`comments.service.spec.ts`)
+  - [x] Likes 서비스 테스트: 좋아요 토글 및 카운트 동기화 로직 테스트 추가 (`likes.service.spec.ts`)
+  - [x] 단위 테스트를 통해 핵심 비즈니스 로직 100% 검증 완료
 
-**수정 파일**: `lib/component/home_content.dart` — `_buildGreeting()` 메서드
-
-```dart
-// 현재:
-Text(
-  '안녕하세요, ${widget.data.user.nickname}님!',
-  ...
-),
-
-// 변경:
-Text(
-  '${_getGreeting()}, ${widget.data.user.nickname}님!',
-  ...
-),
-
-// 클래스 내에 헬퍼 메서드 추가:
-String _getGreeting() {
-  final hour = DateTime.now().hour;
-  if (hour < 6) return '늦은 밤이에요';
-  if (hour < 12) return '좋은 아침이에요';
-  if (hour < 18) return '안녕하세요';
-  return '좋은 저녁이에요';
-}
-```
-
-**검증**: 시간대를 변경하며 인사말이 바뀌는지 확인 (또는 코드의 hour 값을 임시로 바꿔서 테스트).
+### 4-2. 프론트엔드 테스트 전무
+- **현재**: `test/widget_test.dart` 하나만 존재 (기본 카운터 앱 테스트일 가능성)
+- **보완**:
+  - [ ] ApiService 단위 테스트 (Mockito 활용)
+  - [ ] 주요 화면 위젯 테스트 (홈, 로그인, 게시물 작성)
+  - [ ] Auth Provider 상태 변경 테스트
+  - [ ] 통합 테스트: 로그인 → 홈 화면 → 게시물 작성 플로우
 
 ---
 
-### Task 7 — Featured Card 빈 상태 CTA 문구 수정 [UX]
+## 6. 프론트엔드 아키텍처 — 🟢 개선
 
-**문제**: "첫 번째 다이어리를 작성해보세요" 라고 하면서 탭 시 검색 탭으로 이동. 문구와 동작 불일치.
+### 6-1. 상태 관리 미흡
+- **현재**: Provider로 Auth 상태만 관리. 나머지는 `FutureBuilder` + `setState` → 화면 전환마다 API 재호출
+- **위치**: `movie_diary_app/lib/providers/auth_provider.dart`
+- **보완**:
+  - [ ] 데이터 캐싱 레이어 도입 (메모리 캐시 또는 Riverpod)
+  - [ ] 홈 화면 데이터 캐싱 (매번 API 호출 방지)
+  - [ ] 게시물 목록 상태 관리 (작성/수정/삭제 후 즉시 반영)
 
-**수정 파일**: `lib/component/home_content.dart` — `_buildFeaturedEmptyCTA()` 메서드
+### 6-2. 관심사 분리 부족
+- **현재**: 화면 파일 내에 API 호출 로직과 UI 로직이 혼재 (예: `home_content.dart` 1,060줄)
+- **보완**:
+  - [ ] Repository 패턴 도입 (API 호출 추상화)
+  - [ ] ViewModel 또는 Controller 레이어 분리
+  - [ ] 대형 위젯 파일 분할
 
-```dart
-// 현재:
-const Text(
-  '첫 번째 다이어리를 작성해보세요',
-  ...
-),
-const SizedBox(height: 4),
-Text(
-  '영화를 검색하고 감상을 기록하세요',
-  ...
-),
-
-// 변경:
-const Text(
-  '어떤 영화를 보셨나요?',
-  ...
-),
-const SizedBox(height: 4),
-Text(
-  '영화를 검색하고 첫 기록을 남겨보세요',
-  ...
-),
-```
-
-아이콘도 검색에 맞게 변경:
-
-```dart
-// 현재:
-const Icon(Icons.movie_creation_outlined, color: Colors.white, size: 36),
-
-// 변경:
-const Icon(Icons.search_rounded, color: Colors.white, size: 36),
-```
-
-**검증**: 다이어리가 0개인 계정으로 로그인 시 CTA 문구와 아이콘 확인.
+### 6-3. 오프라인/에러 상태 처리 부족
+- **현재**: 네트워크 오류 시 기본적인 SnackBar만 표시. 오프라인 모드 미지원
+- **보완**:
+  - [ ] 네트워크 상태 감지 (`connectivity_plus`)
+  - [ ] 오프라인 시 캐시된 데이터 표시
+  - [ ] 에러 유형별 분기 처리 (타임아웃, 서버 에러, 인증 만료 등)
+  - [ ] 재시도(Retry) 버튼 제공
 
 ---
 
-### Task 8 — 평점 표기 통일 [UX Consistency]
+## 7. 백엔드 아키텍처 — 🟢 개선
 
-**문제**: Featured Card와 가로 스크롤에서는 10점 만점 숫자(예: "9.0")로 표시, 다이어리 카드에서는 5개 별 아이콘(★★★★☆)으로 표시. 같은 화면에서 동일 영화가 다르게 보일 수 있음.
+### 7-1. 로깅 시스템 미흡
+- **현재**: `console.error` 수준의 로깅만 사용
+- **위치**: `movie-diary-backend/src/common/filters/http-exception.filter.ts`
+- **보완**:
+  - [ ] Winston 또는 Pino 로거 도입
+  - [ ] 로그 레벨별 분리 (info, warn, error)
+  - [ ] 요청/응답 로깅 미들웨어 추가
+  - [ ] 프로덕션 로그 파일 출력 또는 외부 서비스 연동
 
-**수정 파일**: `lib/component/home_content.dart` — `_buildDiaryCard()` 메서드
+### 7-2. API 버저닝 없음
+- **현재**: `/auth/login`, `/posts` 등 버전 prefix 없이 직접 노출
+- **보완**:
+  - [ ] Global prefix 설정 (`/api/v1`)
+  - [ ] 프론트엔드 API base URL 업데이트
 
-다이어리 카드의 별 5개 시스템을 제거하고 숫자 표기로 통일:
-
-```dart
-// 현재 (line 901~914): 별 5개 아이콘 시스템
-Row(
-  children: [
-    ...List.generate(5, (i) {
-      final v = entry.rating / 2;
-      if (v >= i + 1) {
-        return const Icon(Icons.star_rounded, color: kPrimary, size: 13);
-      } else if (v > i) {
-        return const Icon(Icons.star_half_rounded, color: kPrimary, size: 13);
-      }
-      return Icon(Icons.star_outline_rounded, color: kSurfaceDim, size: 13);
-    }),
-    const SizedBox(width: 6),
-    Text(
-      entry.watchedDate,
-      ...
-    ),
-  ],
-),
-
-// 변경: 별 1개 + 숫자 + 날짜
-Row(
-  children: [
-    const Icon(Icons.star_rounded, color: kPrimary, size: 14),
-    const SizedBox(width: 2),
-    Text(
-      entry.rating.toStringAsFixed(1),
-      style: const TextStyle(
-        fontFamily: kHeadlineFont,
-        fontSize: 13,
-        fontWeight: FontWeight.w700,
-        color: kOnSurface,
-      ),
-    ),
-    const SizedBox(width: 8),
-    Text(
-      entry.watchedDate,
-      style: TextStyle(
-        fontFamily: kBodyFont,
-        fontSize: 10,
-        color: kOnSurfaceVariant.withValues(alpha: 0.5),
-      ),
-    ),
-  ],
-),
-```
-
-**검증**: 다이어리 카드의 평점 표기가 "★ 9.0" 형식으로 통일되는지 확인.
+### 7-3. 환경 분리 없음
+- **현재**: dev/staging/production 환경 구분이 없음
+- **보완**:
+  - [ ] `.env.development`, `.env.production` 분리
+  - [ ] `ConfigModule`에서 환경별 설정 로드
+  - [ ] `synchronize`, `logging`, `CORS origin` 등 환경별 다르게 적용
 
 ---
 
-### Task 9 — 캘린더 히트맵 날짜 탭 인터랙션 [Feature]
+## 8. 문서화 — 🟢 개선
 
-**문제**: 캘린더 셀이 정보 표시만 하고 인터랙션이 없음.
+### 8-1. README 부재
+- **현재**: 루트에 `GEMINI.md`만 존재. 표준 `README.md` 없음
+- **보완**:
+  - [ ] 루트 `README.md` 작성 (프로젝트 소개, 기술 스택, 설치 방법, 실행 방법)
+  - [ ] 백엔드/프론트엔드 각각의 README 보완
 
-**수정 파일**: `lib/component/home_content.dart` — `_buildCalendarGrid()` 메서드
+### 8-2. API 문서 보강
+- **현재**: Swagger 설정은 되어 있으나 DTO 설명/예제 부족 가능
+- **보완**:
+  - [ ] 모든 DTO에 `@ApiProperty({ description, example })` 추가
+  - [ ] API 응답 예시 문서화
+  - [ ] 에러 응답 형식 문서화
 
-각 날짜 셀을 `GestureDetector`로 감싸고, 탭 시 해당 날짜의 다이어리를 `showModalBottomSheet`로 표시:
-
-```dart
-// _buildCalendarGrid 내부, 날짜 셀 생성 부분:
-// 현재의 Container를 GestureDetector로 감싸기:
-
-cells.add(
-  GestureDetector(
-    onTap: count > 0 ? () => _showDayEntries(context, day) : null,
-    child: Container(
-      margin: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8),
-        border: isToday ? Border.all(color: kPrimary, width: 2) : null,
-      ),
-      child: Center(
-        child: Text('$day', style: TextStyle(...)),
-      ),
-    ),
-  ),
-);
-```
-
-**주의**: `_buildCalendarGrid`는 현재 context를 파라미터로 받지 않으므로, 파라미터에 `BuildContext context`를 추가하거나 클래스 레벨의 context를 사용해야 함.
-
-호출부도 수정:
-```dart
-// 현재:
-_buildCalendarGrid(daysInMonth, firstWeekday, heatmap, now.day),
-
-// 변경:
-_buildCalendarGrid(context, daysInMonth, firstWeekday, heatmap, now.day),
-```
-
-메서드 시그니처 변경:
-```dart
-// 현재:
-Widget _buildCalendarGrid(int daysInMonth, int firstWeekday, Map<int, int> heatmap, int today)
-
-// 변경:
-Widget _buildCalendarGrid(BuildContext context, int daysInMonth, int firstWeekday, Map<int, int> heatmap, int today)
-```
-
-새 메서드 추가:
-
-```dart
-void _showDayEntries(BuildContext context, int day) {
-  final now = DateTime.now();
-  final dayEntries = widget.data.recentEntries.where((e) {
-    final date = DateTime.tryParse(e.watchedDate);
-    return date != null &&
-        date.year == now.year &&
-        date.month == now.month &&
-        date.day == day;
-  }).toList();
-
-  if (dayEntries.isEmpty) return;
-
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    builder: (_) => Container(
-      decoration: const BoxDecoration(
-        color: kSurfaceLowest,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 드래그 핸들
-          Center(
-            child: Container(
-              width: 40, height: 4,
-              decoration: BoxDecoration(
-                color: kSurfaceDim,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // 날짜 헤더
-          Text(
-            '${now.month}월 ${day}일 관람 기록',
-            style: const TextStyle(
-              fontFamily: kHeadlineFont,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: kOnSurface,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // 다이어리 목록
-          ...dayEntries.map((e) => _buildDiaryCard(context, e)),
-        ],
-      ),
-    ),
-  );
-}
-```
-
-**검증**: 관람 기록이 있는 날짜 셀 탭 → BottomSheet에 해당 날짜 다이어리 표시 확인. 기록 없는 날짜는 탭 무시 확인.
+### 8-3. 개발 환경 셋업 가이드 없음
+- **보완**:
+  - [ ] 필수 도구 목록 (Node.js, Flutter, MySQL 버전)
+  - [ ] `.env` 설정 가이드
+  - [ ] DB 초기화 방법 (`mysql-init.txt` 활용)
+  - [ ] 로컬 실행 단계별 안내
 
 ---
 
-### Task 10 — Hero 애니메이션 트랜지션 [Animation]
+## 9. UX/UI 개선 — 🟢 개선
 
-**문제**: 포스터/스틸컷을 탭해서 상세 화면으로 이동할 때 화면이 딱딱하게 전환됨. Featured Card, 가로 스크롤 포스터, 다이어리 카드 포스터가 모두 `Navigator.push`만 사용하고 전환 애니메이션이 없음.
+### 9-1. 다크 모드 미지원
+- **보완**:
+  - [ ] `ThemeData.dark()` 기반 다크 테마 정의
+  - [ ] 시스템 설정 연동 또는 수동 전환 옵션
+  - [ ] `constants.dart` 색상을 테마 기반으로 리팩토링
 
-**수정 파일**: `lib/component/home_content.dart`
+### 9-2. 푸시 알림 없음
+- **보완**:
+  - [ ] FCM (Firebase Cloud Messaging) 연동
+  - [ ] 댓글/좋아요 알림 기능
+  - [ ] 알림 설정 화면
 
-#### 10-1. Featured Card → 다이어리 편집 화면
-
-포스터/스틸컷 이미지에 `Hero` 위젯 감싸기:
-
-```dart
-// _buildFeaturedCard 내부, 배경 이미지 (현재 CachedNetworkImage):
-// CachedNetworkImage를 Hero로 감싸기
-
-Hero(
-  tag: 'diary-hero-${entry.id}',
-  child: CachedNetworkImage(
-    imageUrl: bgUrl,
-    fit: BoxFit.cover,
-    filterQuality: FilterQuality.high,
-    placeholder: (_, __) => Container(color: kSurfaceHigh),
-    errorWidget: (_, __, ___) => Container(color: kSurfaceHigh),
-  ),
-),
-```
-
-#### 10-2. 가로 스크롤 포스터 → MovieDetailScreen
-
-```dart
-// _buildTopRatedMovies 내부, 포스터 이미지:
-
-Hero(
-  tag: 'movie-poster-${rm.movie.docId}',
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(14),
-    child: CachedNetworkImage(
-      imageUrl: rm.movie.posterUrl!,
-      fit: BoxFit.cover,
-      filterQuality: FilterQuality.high,
-      placeholder: (_, __) => Container(color: kSurfaceHigh),
-      errorWidget: (_, __, ___) => Container(color: kSurfaceHigh),
-    ),
-  ),
-),
-```
-
-#### 10-3. 다이어리 카드 포스터 → 상세 화면
-
-```dart
-// _buildDiaryCard 내부, 포스터 이미지:
-
-Hero(
-  tag: 'diary-poster-${entry.id}',
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: CachedNetworkImage(
-      imageUrl: entry.movie.posterUrl!,
-      fit: BoxFit.cover,
-      placeholder: (_, __) => _posterPlaceholder(),
-      errorWidget: (_, __, ___) => _posterPlaceholder(),
-    ),
-  ),
-),
-```
-
-**주의**: 도착 화면(`MovieDetailScreen`, `DiaryWriteScreen`)에도 동일한 `Hero` tag를 가진 위젯이 있어야 함. 해당 화면의 포스터/이미지에도 같은 tag를 적용해야 애니메이션이 동작함.
-
-도착 화면 수정 예시:
-```dart
-// movie_detail_screen.dart 포스터 부분:
-Hero(
-  tag: 'movie-poster-${movie.docId}',
-  child: CachedNetworkImage(imageUrl: movie.posterUrl!, ...),
-),
-```
-
-**검증**: 포스터 탭 시 이미지가 자연스럽게 확대/이동하며 상세 화면으로 전환되는지 확인. 뒤로 가기 시 이미지가 원래 위치로 돌아오는지 확인.
+### 9-3. 소셜 기능 부재
+- **현재**: 다른 사용자의 글은 볼 수 있으나 팔로우/소셜 피드 기능 없음
+- **보완**:
+  - [ ] 사용자 프로필 조회 기능
+  - [ ] 팔로우/언팔로우 기능
+  - [ ] 소셜 피드 (팔로우한 사용자의 게시물)
 
 ---
 
-### Task 11 — 디자인 토큰 통일 (스페이싱 + Border Radius) [Design Consistency]
+## 우선순위 요약
 
-**문제**: 섹션 간 간격과 Border Radius가 제각각이라 시각적으로 불통일.
-
-현재 상태:
-```
-섹션 간 간격:  20pt, 28pt, 32pt, 14pt 혼재
-Border Radius: 20, 18, 16, 14, 8 혼재
-컴포넌트 내부 패딩: 12, 14, 16, 20 혼재
-```
-
-**수정 파일 2개**:
-
-#### 11-1. `lib/constants.dart` — 스페이싱/레디어스 토큰 추가
-
-```dart
-// constants.dart 하단에 추가:
-
-// ── Spacing Tokens ──
-const double kSpacingXS = 4;
-const double kSpacingS = 8;
-const double kSpacingM = 12;
-const double kSpacingL = 16;
-const double kSpacingXL = 20;
-const double kSpacingXXL = 24;
-const double kSpacing3XL = 32;
-const double kSpacingNav = 120;    // 하단 네비게이션 여백
-
-// ── Border Radius Tokens ──
-const double kRadiusS = 8;        // 뱃지, 히트맵 셀
-const double kRadiusM = 12;       // 버튼
-const double kRadiusL = 16;       // 통계 카드
-const double kRadiusXL = 20;      // 대형 카드 (Featured, 캘린더)
-```
-
-#### 11-2. `lib/component/home_content.dart` — 하드코딩된 값을 토큰으로 교체
-
-주요 교체 목록:
-
-```dart
-// ── 섹션 간 간격 통일 (모두 kSpacing3XL = 32pt로) ──
-
-// Greeting → Featured Card 간격
-// 현재: EdgeInsets.fromLTRB(20, 20, 20, 0)
-// 변경: EdgeInsets.fromLTRB(kSpacingXL, kSpacingXXL, kSpacingXL, 0)
-
-// Featured Card → Stats 간격
-// 현재: EdgeInsets.fromLTRB(20, 28, 20, 0)
-// 변경: EdgeInsets.fromLTRB(kSpacingXL, kSpacing3XL, kSpacingXL, 0)
-
-// Stats → Top Rated 간격
-// 현재: EdgeInsets.fromLTRB(20, 32, 20, 0)
-// 변경: EdgeInsets.fromLTRB(kSpacingXL, kSpacing3XL, kSpacingXL, 0)
-
-// 섹션 헤더 → 콘텐츠 간격 통일
-// 현재: SizedBox(height: 14) 또는 SizedBox(height: 20) 혼재
-// 변경: 모두 SizedBox(height: kSpacingL)  // 16pt
-
-// ── Border Radius 통일 ──
-
-// Featured Card
-// 현재: BorderRadius.circular(20)
-// 변경: BorderRadius.circular(kRadiusXL)
-
-// Stat Cards
-// 현재: BorderRadius.circular(16)
-// 변경: BorderRadius.circular(kRadiusL)
-
-// Top-rated 포스터
-// 현재: BorderRadius.circular(14)
-// 변경: BorderRadius.circular(kRadiusL)  // 16으로 올림
-
-// Calendar heatmap 컨테이너
-// 현재: BorderRadius.circular(20)
-// 변경: BorderRadius.circular(kRadiusXL)
-
-// Diary Card
-// 현재: BorderRadius.circular(18)
-// 변경: BorderRadius.circular(kRadiusXL)  // 20으로 통일
-
-// Calendar cell
-// 현재: BorderRadius.circular(8)
-// 변경: BorderRadius.circular(kRadiusS)
-```
-
-**검증**: 모든 섹션 간 간격이 균일한지 시각적으로 확인. 카드 모서리 곡률이 일관된지 확인.
-
----
-
-### Task 12 — home_content.dart 파일 분리 [Code Quality]
-
-**문제**: 단일 파일 1,060줄. 유지보수 어려움.
-
-**작업**: `lib/component/home_content.dart`에서 각 섹션을 별도 위젯 파일로 추출.
-
-분리 후 구조:
-```
-lib/component/
-├── home_content.dart              # CustomScrollView + 섹션 조합 (약 120줄)
-├── home_featured_card.dart        # _buildFeaturedCard + _buildFeaturedEmptyCTA
-├── home_stats_bento.dart          # _buildStatsBento + _statCard
-├── home_top_rated_movies.dart     # _buildTopRatedMovies
-├── home_calendar_heatmap.dart     # _buildCalendarHeatmap + _buildCalendarGrid + _showDayEntries
-├── home_diary_card.dart           # _buildDiaryCard + _posterPlaceholder
-└── home_empty_state.dart          # _buildEmptyState
-```
-
-각 파일은 `StatelessWidget`으로 추출하되, 필요한 데이터와 콜백을 파라미터로 전달:
-
-```dart
-// 예시: home_featured_card.dart
-class HomeFeaturedCard extends StatelessWidget {
-  final DiaryEntry? latestEntry;
-  final VoidCallback? onSearchTap;
-  final VoidCallback? onRefresh;
-
-  const HomeFeaturedCard({
-    super.key,
-    this.latestEntry,
-    this.onSearchTap,
-    this.onRefresh,
-  });
-
-  @override
-  Widget build(BuildContext context) { ... }
-}
-```
-
-```dart
-// home_content.dart는 조합만 담당:
-class HomeContent extends StatelessWidget {
-  final HomeData data;
-  final VoidCallback? onRefresh;
-  final VoidCallback? onSearchTap;
-  final VoidCallback? onDiaryTabTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => onRefresh?.call(),
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: HomeGreeting(nickname: data.user.nickname)),
-          SliverToBoxAdapter(child: HomeFeaturedCard(latestEntry: data.recentEntries.isNotEmpty ? data.recentEntries.first : null, ...)),
-          SliverToBoxAdapter(child: HomeStatsBento(data: data)),
-          if (data.topRatedMovies.isNotEmpty)
-            SliverToBoxAdapter(child: HomeTopRatedMovies(movies: data.topRatedMovies)),
-          SliverToBoxAdapter(child: HomeCalendarHeatmap(heatmap: data.monthlyHeatmap, entries: data.recentEntries)),
-          SliverToBoxAdapter(child: HomeRecentDiaries(entries: data.recentEntries, onDiaryTabTap: onDiaryTabTap)),
-        ],
-      ),
-    );
-  }
-}
-```
-
-**주의**: 이 태스크는 다른 모든 태스크가 완료된 후 마지막에 진행하는 것을 권장. 다른 태스크들이 `home_content.dart`를 직접 수정하므로, 파일 분리를 먼저 하면 나머지 태스크의 수정 위치가 달라짐.
-
-**검증**: 파일 분리 후 앱이 동일하게 동작하는지 전체 기능 확인. Hot reload 정상 동작 확인.
-
----
-
-## Execution Order
-
-```
-Phase 1 — Bug Fix & Core
-  Task 1   (onDiaryTabTap 버그)      ← 가장 먼저, 기능이 깨져있음
-  Task 3   (late final 변환)          ← 단순 리팩터링, 빠르게 가능
-
-Phase 2 — Performance
-  Task 2   (이미지 캐싱)              ← 패키지 추가 필요, 체감 성능 큼
-  Task 4   (Shimmer 로딩)            ← 패키지 추가, 별도 위젯 작성
-
-Phase 3 — UX Polish
-  Task 5   (에러 상태 리트라이)        ← 작은 변경, 큰 UX 개선
-  Task 6   (시간대별 인사말)           ← 1분 작업
-  Task 7   (빈 상태 CTA 문구)         ← 1분 작업
-  Task 8   (평점 표기 통일)           ← 작은 변경
-
-Phase 4 — Feature & Visual
-  Task 9   (캘린더 인터랙션)          ← 새 기능 추가
-  Task 10  (Hero 애니메이션)          ← 화면 전환 개선
-  Task 11  (디자인 토큰 통일)         ← 전체 일관성 작업
-
-Phase 5 — Refactor (반드시 마지막)
-  Task 12  (파일 분리)               ← 다른 태스크 모두 완료 후
-```
-
----
-
-## Packages to Add
-
-```yaml
-# pubspec.yaml → dependencies 섹션에 추가:
-cached_network_image: ^3.4.1    # Task 2
-shimmer: ^3.0.0                 # Task 4
-```
-
-`flutter pub get` 실행 필요.
-
----
-
-## Files Modified (Summary)
-
-| File | Tasks |
-|------|-------|
-| `lib/screens/main_screen.dart` | 1 |
-| `lib/screens/home_screen.dart` | 1, 4, 5 |
-| `lib/component/home_content.dart` | 2, 6, 7, 8, 9, 10, 11, 12 |
-| `lib/data/home_data.dart` | 3 |
-| `lib/constants.dart` | 11 |
-| `lib/screens/movie_detail_screen.dart` | 10 (Hero tag 수신측) |
-| `lib/screens/diary_write_screen.dart` | 10 (Hero tag 수신측) |
-| `pubspec.yaml` | 2, 4 |
+| 순위 | 항목 | 긴급도 | 난이도 |
+|------|------|--------|--------|
+| **0** | **UI 디자인 톤 통일 (4개 화면)** | 🔴 긴급 | 중 |
+| 1 | JWT 만료 + Refresh Token | 🔴 긴급 | 중 |
+| 2 | DB synchronize 끄기 + 마이그레이션 | 🔴 긴급 | 중 |
+| 3 | Rate Limiting 적용 | 🔴 긴급 | 하 |
+| 4 | 댓글/좋아요 기능 구현 | 🟡 중요 | 중 |
+| 5 | 페이지네이션 추가 | 🟡 중요 | 중 |
+| 6 | 핵심 비즈니스 로직 테스트 작성 | 🟡 중요 | 중 |
+| 8 | 프론트엔드 캐싱/상태 관리 개선 | 🟢 개선 | 상 |
+| 9 | 환경 분리 + 로깅 시스템 | 🟢 개선 | 중 |
+| 10 | 문서화 + README | 🟢 개선 | 하 |
+| 11 | 다크 모드 + UX 개선 | 🟢 개선 | 중 |
+| 12 | 소셜 기능 + 푸시 알림 | 🟢 개선 | 상 |
