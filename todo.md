@@ -232,10 +232,10 @@
   - [ ] 이메일 기반 비밀번호 재설정 도입 검토 (미래 과제)
 
 ### 1-5. .env 파일 보안 — ✅ 완료
-- **현재**: 서브모듈 내 `.env` 파일에 DB 비밀번호, JWT Secret, API Key 포함
+- **현재**: 서브모듈 내 `.env` 파일에 DB 비밀번호, JWT Secret, API Key 포함. 백엔드 예시 파일은 존재하나 프론트엔드는 누락됨.
 - **보완**:
   - [x] `.env` 파일이 `.gitignore`에 포함되어 있는지 확인
-  - [x] `.env.example` 파일 생성 (백엔드/프론트엔드 각각 생성 완료)
+  - [x] 프론트엔드(`movie_diary_app`)용 `.env.example` 파일 생성 (완료)
   - [x] 프로덕션 환경 가이드라인 수립 (ConfigService 활용)
 
 ---
@@ -305,66 +305,66 @@
   - [x] Likes 서비스 테스트: 좋아요 토글 및 카운트 동기화 로직 테스트 추가 (`likes.service.spec.ts`)
   - [x] 단위 테스트를 통해 핵심 비즈니스 로직 100% 검증 완료
 
-### 4-2. 프론트엔드 테스트 전무
-- **현재**: `test/widget_test.dart` 하나만 존재 (기본 카운터 앱 테스트일 가능성)
-- **보완**:
-  - [ ] ApiService 단위 테스트 (Mockito 활용)
-  - [ ] 주요 화면 위젯 테스트 (홈, 로그인, 게시물 작성)
-  - [ ] Auth Provider 상태 변경 테스트
-  - [ ] 통합 테스트: 로그인 → 홈 화면 → 게시물 작성 플로우
+### 4-2. 프론트엔드 테스트 보완 — ✅ 완료
+- **현재**: `test/widget_test.dart` 하나만 존재 (해결됨)
+- **보완 내역**:
+  - [x] ApiService 단위 테스트 (`api_service_test.dart`): Mockito/HttpMockAdapter 활용하여 로그인, 등록, 게시물 조회, 일기 저장 등 API 로직 검증 완료
+  - [x] Auth Provider 상태 변경 테스트 (`auth_provider_test.dart`): 로그인/로그아웃 상태 변화 및 리스너 알림 로직 검증 완료
+  - [x] 주요 화면 위젯 테스트 (`login_screen_test.dart`): 로그인 화면 UI 구조 및 로그인 실패 시 스낵바 표시 로직 검증 완료
+  - [x] 테스트 환경 구축: `mockito`, `http_mock_adapter`, `flutter_dotenv` 연동 완료
 
 ---
 
 ## 6. 프론트엔드 아키텍처 — 🟢 개선
 
-### 6-1. 상태 관리 미흡
-- **현재**: Provider로 Auth 상태만 관리. 나머지는 `FutureBuilder` + `setState` → 화면 전환마다 API 재호출
-- **위치**: `movie_diary_app/lib/providers/auth_provider.dart`
+### 6-1. 상태 관리 미흡 — ✅ 완료
+- **현재**: Provider로 Auth 상태만 관리. 나머지는 `FutureBuilder` + `setState` 위주. `ApiService`에 기초적인 캐싱은 구현됨.
+- **위치**: `movie_diary_app/lib/providers/auth_provider.dart`, `lib/services/api_service.dart`
 - **보완**:
-  - [ ] 데이터 캐싱 레이어 도입 (메모리 캐시 또는 Riverpod)
-  - [ ] 홈 화면 데이터 캐싱 (매번 API 호출 방지)
-  - [ ] 게시물 목록 상태 관리 (작성/수정/삭제 후 즉시 반영)
+  - [x] 홈 화면 데이터 캐싱 (ApiService 내 SharedPreferences 캐시 구현 완료)
+  - [x] Riverpod 도입 (PostNotifier를 통한 글로벌 상태 관리 및 메모리 캐시 레이어 구축 완료)
+  - [x] 게시물 목록 상태 관리 (작성/수정/삭제 후 즉시 반영 로직 고도화 완료)
 
-### 6-2. 관심사 분리 부족
-- **현재**: 화면 파일 내에 API 호출 로직과 UI 로직이 혼재 (예: `home_content.dart` 1,060줄)
+### 6-2. 관심사 분리 부족 — ✅ 완료
+- **현재**: 화면 파일 내에 API 호출 로직과 UI 로직이 혼재 (해결됨)
 - **보완**:
-  - [ ] Repository 패턴 도입 (API 호출 추상화)
-  - [ ] ViewModel 또는 Controller 레이어 분리
-  - [ ] 대형 위젯 파일 분할
+  - [x] Repository 패턴 도입 (Auth, Post, Movie, Diary Repository 추상화 완료)
+  - [x] ViewModel 또는 Controller 레이어 분리 (Provider/Riverpod Notifier로 비즈니스 로직 이관 완료)
+  - [x] 대형 위젯 파일 분할 (home_content.dart를 작은 컴포넌트 단위로 모듈화 완료)
 
-### 6-3. 오프라인/에러 상태 처리 부족
+### 6-3. 오프라인/에러 상태 처리 부족 — ✅ 완료
 - **현재**: 네트워크 오류 시 기본적인 SnackBar만 표시. 오프라인 모드 미지원
 - **보완**:
-  - [ ] 네트워크 상태 감지 (`connectivity_plus`)
-  - [ ] 오프라인 시 캐시된 데이터 표시
-  - [ ] 에러 유형별 분기 처리 (타임아웃, 서버 에러, 인증 만료 등)
-  - [ ] 재시도(Retry) 버튼 제공
+  - [x] 네트워크 상태 감지 (`connectivity_plus`)
+  - [x] 오프라인 시 캐시된 데이터 표시 (`HomeData` caching)
+  - [x] 에러 유형별 분기 처리 (타임아웃, 서버 에러, 인증 만료 등)
+  - [x] 재시도(Retry) 버튼 제공
 
 ---
 
 ## 7. 백엔드 아키텍처 — 🟢 개선
 
-### 7-1. 로깅 시스템 미흡
-- **현재**: `console.error` 수준의 로깅만 사용
+### 7-1. 로깅 시스템 미흡 — ✅ 완료
+- **현재**: `console.error` 수준의 로깅만 사용 (해결됨)
 - **위치**: `movie-diary-backend/src/common/filters/http-exception.filter.ts`
 - **보완**:
-  - [ ] Winston 또는 Pino 로거 도입
-  - [ ] 로그 레벨별 분리 (info, warn, error)
-  - [ ] 요청/응답 로깅 미들웨어 추가
-  - [ ] 프로덕션 로그 파일 출력 또는 외부 서비스 연동
+  - [x] Winston 또는 Pino 로거 도입 (Winston 도입 완료)
+  - [x] 로그 레벨별 분리 (info, warn, error 레벨 및 콘솔/파일 출력 분리)
+  - [x] 요청/응답 로깅 미들웨어 추가 (LoggingMiddleware를 통해 모든 HTTP 요청 기록)
+  - [x] 프로덕션 로그 파일 출력 (winston-daily-rotate-file을 통한 일자별 로그 저장)
 
-### 7-2. API 버저닝 없음
-- **현재**: `/auth/login`, `/posts` 등 버전 prefix 없이 직접 노출
+### 7-2. API 버저닝 없음 — ✅ 완료
+- **현재**: `/auth/login`, `/posts` 등 버전 prefix 없이 직접 노출 (해결됨)
 - **보완**:
-  - [ ] Global prefix 설정 (`/api/v1`)
-  - [ ] 프론트엔드 API base URL 업데이트
+  - [x] Global prefix 설정 (main.ts에 '/api/v1' 글로벌 접두사 설정 완료)
+  - [x] 프론트엔드 API base URL 업데이트 (.env.example 수정 및 연동 가이드 완료)
 
-### 7-3. 환경 분리 없음
-- **현재**: dev/staging/production 환경 구분이 없음
+### 7-3. 환경 분리 없음 — ✅ 완료
+- **현재**: dev/staging/production 환경 구분이 없음 (해결됨)
 - **보완**:
-  - [ ] `.env.development`, `.env.production` 분리
-  - [ ] `ConfigModule`에서 환경별 설정 로드
-  - [ ] `synchronize`, `logging`, `CORS origin` 등 환경별 다르게 적용
+  - [x] `.env.development`, `.env.production` 분리 (.env.development.example, .env.production.example 생성 완료)
+  - [x] `ConfigModule`에서 환경별 설정 로드 (NODE_ENV에 따라 envFilePath 동적 로드 설정 완료)
+  - [x] `synchronize`, `logging`, `CORS origin` 등 환경별 다르게 적용 (TypeORM 로깅 및 Winston 레벨 환경별 분기 처리 완료)
 
 ---
 
@@ -426,7 +426,7 @@
 | 4 | 댓글/좋아요 기능 구현 | 🟡 중요 | 중 |
 | 5 | 페이지네이션 추가 | 🟡 중요 | 중 |
 | 6 | 핵심 비즈니스 로직 테스트 작성 | 🟡 중요 | 중 |
-| 8 | 프론트엔드 캐싱/상태 관리 개선 | 🟢 개선 | 상 |
+| 8 | 프론트엔드 캐싱/상태 관리 개선 | ✅ 완료 | 상 |
 | 9 | 환경 분리 + 로깅 시스템 | 🟢 개선 | 중 |
 | 10 | 문서화 + README | 🟢 개선 | 하 |
 | 11 | 다크 모드 + UX 개선 | 🟢 개선 | 중 |
