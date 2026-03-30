@@ -370,25 +370,25 @@
 
 ## 8. 문서화 — 🟢 개선
 
-### 8-1. README 부재
-- **현재**: 루트에 `GEMINI.md`만 존재. 표준 `README.md` 없음
+### 8-1. README 부재 — ✅ 완료
+- **현재**: 루트에 `GEMINI.md`만 존재. 표준 `README.md` 없음 (해결됨)
 - **보완**:
-  - [ ] 루트 `README.md` 작성 (프로젝트 소개, 기술 스택, 설치 방법, 실행 방법)
-  - [ ] 백엔드/프론트엔드 각각의 README 보완
+  - [x] 루트 `README.md` 작성 (프로젝트 소개, 기술 스택, 설치 방법, 실행 방법)
+  - [x] 백엔드/프론트엔드 각각의 README 보완
 
-### 8-2. API 문서 보강
-- **현재**: Swagger 설정은 되어 있으나 DTO 설명/예제 부족 가능
+### 8-2. API 문서 보강 — ✅ 완료
+- **현재**: Swagger 설정은 되어 있으나 DTO 설명/예제 부족 가능 (해결됨)
 - **보완**:
-  - [ ] 모든 DTO에 `@ApiProperty({ description, example })` 추가
-  - [ ] API 응답 예시 문서화
-  - [ ] 에러 응답 형식 문서화
+  - [x] 모든 DTO에 `@ApiProperty({ description, example })` 추가
+  - [x] API 응답 예시 문서화 (DTO examples 및 Controller ApiResponse 추가)
+  - [x] 에러 응답 형식 문서화 (`ErrorResponseDto` 도입 및 모든 컨트롤러 적용)
 
-### 8-3. 개발 환경 셋업 가이드 없음
+### 8-3. 개발 환경 셋업 가이드 없음 — ✅ 완료
 - **보완**:
-  - [ ] 필수 도구 목록 (Node.js, Flutter, MySQL 버전)
-  - [ ] `.env` 설정 가이드
-  - [ ] DB 초기화 방법 (`mysql-init.txt` 활용)
-  - [ ] 로컬 실행 단계별 안내
+  - [x] 필수 도구 목록 (Node.js, Flutter, MySQL 버전)
+  - [x] `.env` 설정 가이드
+  - [x] DB 초기화 방법 (`mysql-init.txt` 활용)
+  - [x] 로컬 실행 단계별 안내 (루트 README.md에 통합 가이드 작성 완료)
 
 ---
 
